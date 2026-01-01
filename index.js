@@ -3,8 +3,9 @@ var app = express();
 var mongoose = require("mongoose");
 var session = require("express-session");
 
-require("dotenv").config(); // local đọc .env (Render vẫn chạy vì Render có Env riêng)
-
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
 const GioHang = require("./models/GioHang");
 const DanhMuc = require("./models/DanhMuc");
 const expressLayouts = require("express-ejs-layouts");
