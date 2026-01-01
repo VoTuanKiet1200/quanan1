@@ -1,0 +1,81 @@
+<link rel="stylesheet" href="/css/danhmucql.css">
+
+<div class="page-danhmuc">
+    <div class="toolbar-danhmuc">
+        <div class="toolbar-left-danhmuc">
+            <h2 class="title-danhmuc">Quản lý danh mục</h2>
+            <div class="subtitle-danhmuc">Danh sách danh mục</div>
+        </div>
+
+        <input class="search-danhmuc" placeholder="Tìm theo tên / slug / mô tả..." oninput="
+      const q=this.value.toLowerCase();
+      document.querySelectorAll('.table-danhmuc tbody tr').forEach(tr=>{
+        tr.style.display = tr.innerText.toLowerCase().includes(q) ? '' : 'none';
+      });
+    " />
+
+        <a class="btn-danhmuc btn-danhmuc--primary" href="/admin/danhmuc/them">+Thêm</a>
+    </div>
+
+    <div class="table-wrap-danhmuc">
+        <table class="table-danhmuc">
+            <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Slug</th>
+                    <th>Thứ tự</th>
+                    <th>Mô tả</th>
+                    <th>Kích hoạt</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% (items||[]).forEach(dm=>{ %>
+                    <tr>
+                        <td class="name-danhmuc">
+                            <div class="name-danhmuc__main">
+                                <%= dm.TenDanhMuc %>
+                            </div>
+                        </td>
+
+                        <td><span class="chip-danhmuc">
+                                <%= dm.Slug || '' %>
+                            </span></td>
+
+                        <td><span class="chip-danhmuc">
+                                <%= Number(dm.ThuTu || 0) %>
+                            </span></td>
+
+                        <td style="max-width:420px;">
+                            <div style="opacity:.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                <%= dm.MoTa || '' %>
+                            </div>
+                        </td>
+
+                        <td>
+                            <% if (Number(dm.KichHoat)===1) { %>
+                                <span class="badge-danhmuc badge-danhmuc--on">BẬT</span>
+                                <% } else { %>
+                                    <span class="badge-danhmuc badge-danhmuc--off">TẮT</span>
+                                    <% } %>
+                        </td>
+
+                        <td>
+                            <div class="hanhdong-danhmuc">
+                                <a class="btn-danhmuc btn-danhmuc--sm btn-danhmuc-sua"
+                                    href="/admin/danhmuc/sua/<%= dm._id %>">Sửa</a>
+
+                                <form class="form-danhmuc-inline" action="/admin/danhmuc/xoa/<%= dm._id %>"
+                                    method="POST" onsubmit="return confirm('Xóa danh mục này?')">
+                                    <button class="btn-danhmuc btn-danhmuc--sm btn-danhmuc-danger"
+                                        type="submit">Xóa</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>

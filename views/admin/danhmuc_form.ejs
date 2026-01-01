@@ -1,0 +1,65 @@
+<link rel="stylesheet" href="/css/danhmucform.css">
+
+<div class="danhmucform">
+    <div class="danhmucform-head">
+        <div>
+            <h2 class="danhmucform-title">
+                <%= title || (mode==='edit' ? 'Sửa danh mục' : 'Thêm danh mục' ) %>
+            </h2>
+            <div class="danhmucform-sub">
+                <%= mode==='edit' ? 'Cập nhật danh mục' : 'Tạo danh mục mới' %>
+            </div>
+        </div>
+
+        <a class="danhmucform-back" href="/admin/danhmuc">
+            <i class="bi bi-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <form class="danhmucform-card" method="POST"
+        action="<%= mode==='edit' ? ('/admin/danhmuc/sua/' + item._id) : '/admin/danhmuc/them' %>">
+
+        <div class="danhmucform-grid">
+            <div class="danhmucform-field">
+                <label class="danhmucform-label">Tên danh mục <span class="req">*</span></label>
+                <input class="danhmucform-input" name="TenDanhMuc" required maxlength="80"
+                    value="<%= item?.TenDanhMuc || '' %>" placeholder="VD: Món khai vị" />
+            </div>
+
+            <div class="danhmucform-field">
+                <label class="danhmucform-label">Slug (tuỳ chọn)</label>
+                <input class="danhmucform-input" name="Slug" value="<%= item?.Slug || '' %>"
+                    placeholder="tu-dong-neu-bo-trong" />
+                <small class="danhmucform-hint">Bỏ trống để hệ thống tự tạo (khi thêm). Khi sửa mà bỏ trống sẽ giữ slug
+                    cũ.</small>
+            </div>
+
+            <div class="danhmucform-field">
+                <label class="danhmucform-label">Thứ tự</label>
+                <input class="danhmucform-input" name="ThuTu" type="number"
+                    value="<%= (typeof item?.ThuTu !== 'undefined') ? item.ThuTu : 0 %>" />
+            </div>
+
+            <div class="danhmucform-field">
+                <label class="danhmucform-label">Kích hoạt</label>
+                <select class="danhmucform-input" name="KichHoat">
+                    <option value="1" <%=Number(item?.KichHoat ?? 1)===1 ? 'selected' : '' %>>Bật</option>
+                    <option value="0" <%=Number(item?.KichHoat ?? 1)===0 ? 'selected' : '' %>>Tắt</option>
+                </select>
+            </div>
+
+            <div class="danhmucform-field" style="grid-column: 1 / -1;">
+                <label class="danhmucform-label">Mô tả</label>
+                <textarea class="danhmucform-input" name="MoTa" rows="4"
+                    placeholder="Mô tả ngắn..."><%= item?.MoTa || '' %></textarea>
+            </div>
+        </div>
+
+        <div class="danhmucform-actions">
+            <button class="danhmucform-btn danhmucform-btn--primary" type="submit">
+                <%= mode==='edit' ? 'Lưu thay đổi' : 'Thêm danh mục' %>
+            </button>
+            <a class="danhmucform-btn" href="/admin/danhmuc">Hủy</a>
+        </div>
+    </form>
+</div>

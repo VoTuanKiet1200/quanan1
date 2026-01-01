@@ -1,0 +1,117 @@
+<link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+<link rel="stylesheet" href="/css/donhang-user.css">
+
+<% const s=state || {}; const rows=orders || []; %>
+
+    <section class="uh">
+        <%- include('../nav', { active: 'donhang' }) %>
+
+            <div class="uh-wrap">
+                <div class="uh-head">
+                    <h1 class="uh-title">Đơn hàng của tôi</h1>
+                    <div class="uh-sub">Tổng: <b>
+                            <%= s.total || 0 %>
+                        </b> đơn</div>
+                </div>
+
+                <form class="uh-filters" method="GET" action="/donhang">
+                    <label class="uh-field">
+                        <span>Trạng thái</span>
+                        <select name="status">
+                            <option value="" <%=!s.status ? "selected" : "" %>>Tất cả</option>
+                            <option value="NEW" <%=s.status==="NEW" ?"selected":"" %>>Mới</option>
+                            <option value="CONFIRMED" <%=s.status==="CONFIRMED" ?"selected":"" %>>Đã xác nhận</option>
+                            <option value="SHIPPING" <%=s.status==="SHIPPING" ?"selected":"" %>>Đang giao</option>
+                            <option value="DONE" <%=s.status==="DONE" ?"selected":"" %>>Hoàn tất</option>
+                            <option value="CANCELLED" <%=s.status==="CANCELLED" ?"selected":"" %>>Đã huỷ</option>
+                        </select>
+                    </label>
+
+                    <button class="uh-btn uh-btn--primary" type="submit">
+                        Lọc
+                    </button>
+                </form>
+
+                <% if (!rows.length) { %>
+                    <div class="uh-empty">
+                        <i class="bi bi-receipt"></i>
+                        <div>
+                            <div class="t1">Chưa có đơn hàng</div>
+                            <div class="t2">Bạn có thể quay lại thực đơn để đặt món.</div>
+                            <a class="uh-btn" href="/thucdon">Mua ngay</a>
+                        </div>
+                    </div>
+                    <% } else { %>
+
+                        <div class="uh-list">
+                            <% rows.forEach(o=> { %>
+                                <a class="uh-card" href="/donhang/<%= o._id %>">
+                                    <div class="uh-card__top">
+                                        <div class="uh-code">#<%= shortId(o._id) %>
+                                        </div>
+                                        <div class="uh-status uh-status--<%= (o.TrangThai||'NEW').toLowerCase() %>">
+                                            <%= o.TrangThai || "NEW" %>
+                                        </div>
+                                    </div>
+
+                                    <div class="uh-card__mid">
+                                        <div class="uh-row">
+                                            <span>Ngày</span>
+                                            <b>
+                                                <%= fmtDate(o.createdAt) %>
+                                            </b>
+                                        </div>
+                                        <div class="uh-row">
+                                            <span>Thanh toán</span>
+                                            <b>
+                                                <%= o.DaThanhToan ? "Đã thanh toán" : "Chưa thanh toán" %>
+                                            </b>
+                                        </div>
+                                        <div class="uh-row">
+                                            <span>Tổng tiền</span>
+                                            <b>
+                                                <%= money(o.TongTien || 0) %>
+                                            </b>
+                                        </div>
+                                    </div>
+
+                                    <div class="uh-card__bot">
+                                        <span>Xem chi tiết</span>
+                                        <i class="bi bi-chevron-right"></i>
+                                    </div>
+                                </a>
+                                <% }) %>
+                        </div>
+
+                        <% if ((s.totalPages || 1)> 1) { %>
+                            <div class="uh-pager">
+                                <% const base=(p)=> {
+                                    const params = new URLSearchParams();
+                                    if (s.status) params.set("status", s.status);
+                                    params.set("page", String(p));
+                                    return "/donhang?" + params.toString();
+                                    }; %>
+
+                                    <% if (s.page> 1) { %>
+                                        <a class="uh-page" href="<%= base(s.page - 1) %>">← Trước</a>
+                                        <% } else { %>
+                                            <span class="uh-page is-disabled">← Trước</span>
+                                            <% } %>
+
+                                                <span class="uh-page is-info">Trang <b>
+                                                        <%= s.page %>
+                                                    </b>/<b>
+                                                        <%= s.totalPages %>
+                                                    </b></span>
+
+                                                <% if (s.page < s.totalPages) { %>
+                                                    <a class="uh-page" href="<%= base(s.page + 1) %>">Sau →</a>
+                                                    <% } else { %>
+                                                        <span class="uh-page is-disabled">Sau →</span>
+                                                        <% } %>
+                            </div>
+                            <% } %>
+
+                                <% } %>
+            </div>
+    </section>

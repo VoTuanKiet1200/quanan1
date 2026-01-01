@@ -1,0 +1,121 @@
+<link rel="stylesheet" href="/css/admin-donhang.css">
+<link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+
+<% const o=order || {}; const ship=o.ThongTinGiaoHang || o.thongTinGiaoHang || {}; const items=(Array.isArray(o.Items)
+    && o.Items) || (Array.isArray(o.items) && o.items) || (Array.isArray(o.DanhSachMon) && o.DanhSachMon) ||
+    (Array.isArray(o.danhSachMon) && o.danhSachMon) || (Array.isArray(o.ChiTiet) && o.ChiTiet) ||
+    (Array.isArray(o.chiTiet) && o.chiTiet) || []; const money=(n)=> Number(n||0).toLocaleString('vi-VN') + "₫";
+    %>
+
+
+    <div class="ad-od">
+        <div class="ad-od__head">
+            <a class="ad-od__back" href="/admin/donhang"><i class="bi bi-arrow-left"></i> Quay lại</a>
+            <div class="ad-od__title">Đơn #<%= shortId(o._id) %>
+            </div>
+            <span class="pill pill--st pill--<%= String(o.TrangThai||'NEW').toLowerCase() %>">
+                <%= statusVI ? statusVI(o.TrangThai) : (o.TrangThai || 'NEW' ) %>
+            </span>
+
+        </div>
+
+        <div class="ad-od__grid">
+            <div class="ad-od__left card">
+                <div class="card__title">Sản phẩm</div>
+
+                <% if (!items.length) { %>
+                    <div class="muted">Không có sản phẩm.</div>
+                    <% } else { %>
+                        <div class="ad-od__items">
+                            <% items.forEach(it=> {
+                                const ten = it.TenMon || it.ten || it.name || it.Ten || "";
+                                const donGia = Number(it.DonGia ?? it.donGia ?? it.Gia ?? it.gia ?? 0);
+                                const soLuong = Number(it.SoLuong ?? it.soLuong ?? it.qty ?? 1);
+                                const img = String(it.HinhAnh || it.anh || it.Anh || "").trim() ||
+                                "/images/placeholder-food.png";
+                                %>
+                                <div class="ad-od__item">
+                                    <img class="ad-od__img" src="<%= img %>" alt="">
+                                    <div class="ad-od__info">
+                                        <div class="ad-od__name">
+                                            <%= ten %>
+                                        </div>
+                                        <div class="ad-od__meta">
+                                            <span>
+                                                <%= money(donGia) %>
+                                            </span> <span>×</span> <b>
+                                                <%= soLuong %>
+                                            </b>
+                                        </div>
+                                    </div>
+                                    <div class="ad-od__line"><b>
+                                            <%= money(donGia * soLuong) %>
+                                        </b></div>
+                                </div>
+                                <% }) %>
+                        </div>
+                        <% } %>
+            </div>
+
+            <aside class="ad-od__right">
+                <div class="card">
+                    <div class="card__title">Tổng kết</div>
+                    <div class="row"><span>Ngày đặt</span><b>
+                            <%= fmtDate(o.createdAt) %>
+                        </b></div>
+                    <div class="row"><span>Tổng tiền</span><b>
+                            <%= money(o.TongTien || 0) %>
+                        </b></div>
+                    <div class="row"><span>Thanh toán</span>
+                        <% if (o.DaThanhToan) { %><b class="ok">Đã thanh toán</b>
+                            <% } else { %><b class="warn">Chưa thanh toán</b>
+                                <% } %>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card__title">Cập nhật</div>
+
+                    <form class="ad-od__form" method="POST" action="/admin/donhang/<%= o._id %>/trangthai">
+                        <label>Trạng thái</label>
+                        <select name="TrangThai">
+                            <% ORDER_STATUS.forEach(st=> { %>
+                                <option value="<%= st %>" <%=(String(o.TrangThai||'NEW')===st ? 'selected' : '' ) %>>
+                                    <%= statusVI ? statusVI(st) : st %>
+                                </option>
+                                <% }) %>
+                        </select>
+
+                        <button type="submit" class="btn">Lưu trạng thái</button>
+                    </form>
+
+                    <form class="ad-od__form" method="POST" action="/admin/donhang/<%= o._id %>/thanhtoan">
+                        <label>Thanh toán</label>
+                        <select name="DaThanhToan">
+                            <option value="0" <%=(!o.DaThanhToan ? 'selected' : '' ) %>>Chưa thanh toán</option>
+                            <option value="1" <%=(o.DaThanhToan ? 'selected' : '' ) %>>Đã thanh toán</option>
+                        </select>
+                        <button type="submit" class="btn">Lưu thanh toán</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card__title">Giao hàng</div>
+                    <div class="row"><span>Họ tên</span><b>
+                            <%= ship.HoTen || '-' %>
+                        </b></div>
+                    <div class="row"><span>SĐT</span><b>
+                            <%= ship.SDT || '-' %>
+                        </b></div>
+                    <div class="row"><span>Địa chỉ</span><b>
+                            <%= ship.DiaChi || '-' %>
+                        </b></div>
+                    <% if (ship.GhiChu) { %>
+                        <div class="note">
+                            <%= ship.GhiChu %>
+                        </div>
+                        <% } %>
+                </div>
+            </aside>
+        </div>
+    </div>

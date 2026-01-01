@@ -1,0 +1,253 @@
+<!-- views/taikhoan/dashboard-user.ejs -->
+<link rel="stylesheet" href="/css/userdashboard-page.css">
+
+<% /*=====Helpers cho trạng thái đơn (TỰ ĐỦ SCOPE)=====*/ const getStatusMeta=(s)=> {
+    const k = String(s || '').toLowerCase();
+
+    if (['done','delivered','completed','complete','success'].includes(k)) {
+    return { text: 'HOÀN TẤT', cls: 'ud-badge--done' };
+    }
+
+    if (['confirmed'].includes(k)) {
+    return { text: 'ĐÃ XÁC NHẬN', cls: 'ud-badge--confirmed' };
+    }
+
+    if (['packed'].includes(k)) {
+    return { text: 'ĐÃ ĐÓNG GÓI', cls: 'ud-badge--packed' };
+    }
+
+    if (['shipping','shipped','in_transit'].includes(k)) {
+    return { text: 'ĐANG GIAO', cls: 'ud-badge--shipping' };
+    }
+
+    if (['pending','processing'].includes(k)) {
+    return { text: 'ĐANG XỬ LÝ', cls: 'ud-badge--pending' };
+    }
+
+    if (['cancel','canceled','cancelled'].includes(k)) {
+    return { text: 'ĐÃ HỦY', cls: 'ud-badge--cancel' };
+    }
+
+    if (['failed','error'].includes(k)) {
+    return { text: 'THẤT BẠI', cls: 'ud-badge--failed' };
+    }
+
+    if (['returned','return'].includes(k)) {
+    return { text: 'HOÀN HÀNG', cls: 'ud-badge--returned' };
+    }
+
+    if (['refunded','refund'].includes(k)) {
+    return { text: 'HOÀN TIỀN', cls: 'ud-badge--refunded' };
+    }
+
+    return { text: (s || '---'), cls: 'ud-badge--unknown' };
+    };
+    %>
+
+
+    <div class="page-userdash">
+
+        <!-- HEADER -->
+        <div class="ud-head ud-head--new">
+            <div class="ud-profile">
+                <% const name=tk?.HoVaTen || (session?.HoVaTen) || 'User' ; %>
+                    <% const avatar=tk?.HinhAnh || session?.HinhAnh || null; %>
+
+                        <% if (avatar) { %>
+                            <img class="ud-avatar" src="<%= avatar %>" alt="Avatar">
+                            <% } else { %>
+                                <div class="ud-avatar ud-avatar--txt">
+                                    <%= String(name).slice(0,1).toUpperCase() %>
+                                </div>
+                                <% } %>
+
+                                    <div class="ud-profile-info">
+                                        <h2>Xin chào, <span>
+                                                <%= name %>
+                                            </span></h2>
+                                        <div class="ud-sub">Tổng quan tài khoản và truy cập nhanh các mục quan trọng
+                                        </div>
+                                    </div>
+            </div>
+
+            <div class="ud-actions">
+                <a class="ud-btn" href="/"><i class="bi bi-house"></i> Trang chủ</a>
+                <a class="ud-btn" href="/sanpham"><i class="bi bi-bag"></i> Mua sắm</a>
+                <a class="ud-btn ud-btn--primary" href="/taikhoan/thongtin"><i class="bi bi-person"></i> Hồ sơ</a>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="ud-grid ud-grid--new">
+            <a class="ud-card ud-card--soft" href="/donhang">
+                <div class="ud-card-top">
+                    <div>
+                        <div class="ud-card-label">Đơn hàng</div>
+                        <div class="ud-card-sub">Theo dõi trạng thái</div>
+                    </div>
+                    <div class="ud-ic"><i class="bi bi-receipt"></i></div>
+                </div>
+                <div class="ud-card-value">
+                    <%= (stats?.orderCount ?? 0) %>
+                </div>
+            </a>
+
+            <a class="ud-card ud-card--soft" href="/giohang">
+                <div class="ud-card-top">
+                    <div>
+                        <div class="ud-card-label">Giỏ hàng</div>
+                        <div class="ud-card-sub">Sản phẩm đang có</div>
+                    </div>
+                    <div class="ud-ic"><i class="bi bi-cart4"></i></div>
+                </div>
+                <div class="ud-card-value">
+                    <%= (typeof cartCount !=='undefined' ? cartCount : 0) %>
+                </div>
+            </a>
+
+            <a class="ud-card ud-card--soft" href="/yeuthich">
+                <div class="ud-card-top">
+                    <div>
+                        <div class="ud-card-label">Yêu thích</div>
+                        <div class="ud-card-sub">Danh sách đã lưu</div>
+                    </div>
+                    <div class="ud-ic"><i class="bi bi-heart"></i></div>
+                </div>
+                <div class="ud-card-value">
+                    <%= (stats?.favoriteCount ?? 0) %>
+                </div>
+            </a>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="ud-row ud-row--new">
+
+            <!-- LEFT -->
+            <div class="ud-box ud-box--new">
+                <div class="ud-box-head">
+                    <div>
+                        <div class="ud-box-title">Đơn hàng gần đây</div>
+                        <div class="ud-box-sub">Hiển thị 5 đơn mới nhất</div>
+                    </div>
+                    <a class="ud-link" href="/donhang">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+                </div>
+
+                <div class="ud-table-wrap">
+                    <table class="ud-table">
+                        <thead>
+                            <tr>
+                                <th>Mã</th>
+                                <th>Ngày</th>
+                                <th>Trạng thái</th>
+                                <th class="tr">Tổng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% const orders=(typeof recentOrders !=='undefined' && recentOrders) ? recentOrders : []; %>
+                                <% if (!orders.length) { %>
+                                    <tr>
+                                        <td colspan="4" class="ud-empty">Chưa có đơn hàng nào.</td>
+                                    </tr>
+                                    <% } else { %>
+                                        <% orders.slice(0,5).forEach(o=> { %>
+                                            <% const meta=getStatusMeta(o.trangThai); %>
+
+                                                <tr>
+
+                                                    <td>
+                                                        <a href="/donhang/<%= o._id %>"
+                                                            style="text-decoration:none;color:inherit">
+                                                            <b>
+                                                                <%= o.ma || o._id %>
+                                                            </b>
+                                                        </a>
+                                                    </td>
+
+                                                    <td>
+                                                        <%= o.ngay ? new Date(o.ngay).toLocaleDateString('vi-VN') : '-'
+                                                            %>
+                                                    </td>
+
+                                                    <td>
+                                                        <span class="ud-badge <%= meta.cls %>">
+
+                                                            <%= meta.text %>
+                                                        </span>
+                                                    </td>
+
+                                                    <td class="tongtien">
+                                                        <%= (o.tong || 0).toLocaleString('vi-VN') %>₫
+                                                    </td>
+
+                                                </tr>
+
+                                                <% }) %>
+                                                    <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="ud-side ud-side--new">
+
+                <div class="ud-box ud-box--new">
+                    <div class="ud-box-head">
+                        <div>
+                            <div class="ud-box-title">Thông tin tài khoản</div>
+                            <div class="ud-box-sub">Tóm tắt nhanh</div>
+                        </div>
+                    </div>
+
+                    <div class="ud-kv">
+                        <div class="kv">
+                            <div class="k">Họ và tên</div>
+                            <div class="v">
+                                <%= tk?.HoVaTen || '---' %>
+                            </div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Tên đăng nhập</div>
+                            <div class="v">
+                                <%= tk?.TenDangNhap || '---' %>
+                            </div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Email</div>
+                            <div class="v">
+                                <%= tk?.Email || 'Chưa cập nhật' %>
+                            </div>
+                        </div>
+                        <div class="kv">
+                            <div class="k">Trạng thái</div>
+                            <div class="v">
+                                <%= (tk?.KichHoat===1) ? 'Đang hoạt động' : 'Bị khóa' %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ud-quick ud-quick--grid">
+                        <a class="ud-qbtn" href="/taikhoan/thongtin"><i class="bi bi-person-fill-gear"></i> Hồ sơ</a>
+                        <a class="ud-qbtn" href="/taikhoan#doi-mat-khau"><i class="bi bi-key-fill"></i> Mật khẩu</a>
+                    </div>
+                </div>
+
+                <div class="ud-box ud-box--new">
+                    <div class="ud-box-head">
+                        <div>
+                            <div class="ud-box-title">Truy cập nhanh</div>
+                            <div class="ud-box-sub">Các trang hay dùng</div>
+                        </div>
+                    </div>
+
+                    <div class="ud-shortcuts ud-shortcuts--grid">
+                        <a class="ud-short" href="/sanpham"><i class="bi bi-grid"></i> Sản phẩm</a>
+                        <a class="ud-short" href="/donhang"><i class="bi bi-receipt"></i> Đơn hàng</a>
+                        <a class="ud-short" href="/giohang"><i class="bi bi-cart4"></i> Giỏ hàng</a>
+                        <a class="ud-short" href="/yeuthich"><i class="bi bi-heart"></i> Yêu thích</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>

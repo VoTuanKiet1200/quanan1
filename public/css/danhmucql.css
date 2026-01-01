@@ -1,0 +1,150 @@
+.page-danhmuc {
+    width: 100%;
+}
+
+.toolbar-danhmuc {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.toolbar-left-danhmuc {
+    margin-right: auto;
+}
+
+.title-danhmuc {
+    margin: 0;
+    font-size: 22px;
+}
+
+.subtitle-danhmuc {
+    opacity: .75;
+    margin-top: 2px;
+}
+
+.search-danhmuc {
+    min-width: 260px;
+    flex: 0 1 340px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    color: inherit;
+    padding: 0 12px;
+    outline: none;
+}
+
+.btn-danhmuc {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    color: inherit;
+}
+
+.btn-danhmuc--primary {
+    background: rgba(212, 255, 58, .95);
+    border-color: rgba(212, 255, 58, .95);
+    color: #111;
+    font-weight: 700;
+}
+
+.btn-danhmuc--sm {
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 10px;
+}
+
+.btn-danhmuc-danger {
+    background: rgba(255, 70, 70, .16);
+    border-color: rgba(255, 70, 70, .22);
+}
+
+.table-wrap-danhmuc {
+    overflow: auto;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    background: rgba(255, 255, 255, .03);
+}
+
+.table-danhmuc {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+.table-danhmuc th,
+.table-danhmuc td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    vertical-align: middle;
+}
+
+.table-danhmuc thead th {
+    text-align: left;
+    font-size: 13px;
+    opacity: .85;
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+}
+
+.chip-danhmuc {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    font-size: 12px;
+}
+
+.badge-danhmuc {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: .04em;
+    border: 1px solid rgba(255, 255, 255, .12);
+}
+
+.badge-danhmuc--on {
+    background: rgba(70, 255, 160, .14);
+    border-color: rgba(70, 255, 160, .22);
+}
+
+.badge-danhmuc--off {
+    background: rgba(255, 70, 70, .14);
+    border-color: rgba(255, 70, 70, .22);
+}
+
+.hanhdong-danhmuc {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.form-danhmuc-inline {
+    display: inline;
+}
+
+@media (max-width: 740px) {
+    .search-danhmuc {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+}

@@ -1,0 +1,167 @@
+<link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+<link rel="stylesheet" href="/css/donhang-user.css">
+
+<% const money=(n)=> (Number(n||0)).toLocaleString('vi-VN') + "₫";
+
+    const o = order || {};
+
+    const rawItems =
+    o.Items ||
+    o.items ||
+    o.DanhSachMon ||
+    o.danhSachMon ||
+    o.ChiTiet ||
+    o.chiTiet ||
+    o.SanPham ||
+    o.sanPham ||
+    [];
+
+    const items = Array.isArray(rawItems) ? rawItems : [];
+
+    const ship = o.ThongTinGiaoHang || o.thongTinGiaoHang || {};
+
+    // ✅ QR/bankInfo được route truyền sang (qrSrc, bankInfo)
+    const pay = String(o.PhuongThucThanhToan || "COD").toUpperCase();
+    const qr = (typeof qrSrc !== "undefined") ? qrSrc : "";
+    const bank = (typeof bankInfo !== "undefined") ? bankInfo : null;
+    %>
+
+    <section class="uh">
+        <%- include('../nav', { active: 'donhang' }) %>
+
+            <div class="uh-wrap">
+                <div class="ud-head">
+                    <a class="ud-back" href="/donhang"><i class="bi bi-arrow-left"></i> Quay lại</a>
+                    <div class="ud-title">Đơn #<%= shortId(o._id) %>
+                    </div>
+                    <div class="uh-status uh-status--<%= (o.TrangThai||'NEW').toLowerCase() %>">
+                        <%= o.TrangThai || "NEW" %>
+                    </div>
+                </div>
+
+                <div class="ud-grid">
+                    <div class="ud-left">
+                        <div class="ud-box">
+                            <div class="ud-box__title">Sản phẩm</div>
+
+                            <% if (!items.length) { %>
+                                <div class="ud-empty">Không có sản phẩm.</div>
+                                <% } else { %>
+                                    <div class="ud-items">
+                                        <% items.forEach(it=> {
+                                            const ten = it.TenMon || it.ten || it.Ten || it.name || "";
+                                            const donGia = Number(it.DonGia ?? it.donGia ?? it.Gia ?? it.gia ?? 0);
+                                            const soLuong = Number(it.SoLuong ?? it.soLuong ?? it.qty ?? 1);
+                                            const img = (it.HinhAnh || it.anh || it.Anh || "").toString().trim() ||
+                                            "/images/b1.png";
+                                            %>
+                                            <div class="ud-item">
+                                                <img class="ud-item__img" src="<%= img %>" alt="">
+                                                <div class="ud-item__info">
+                                                    <div class="ud-item__name">
+                                                        <%= ten %>
+                                                    </div>
+                                                    <div class="ud-item__meta">
+                                                        <span>
+                                                            <%= money(donGia) %>
+                                                        </span>
+                                                        <span>×</span>
+                                                        <b>
+                                                            <%= soLuong %>
+                                                        </b>
+                                                    </div>
+                                                </div>
+                                                <div class="ud-item__line"><b>
+                                                        <%= money(donGia * soLuong) %>
+                                                    </b></div>
+                                            </div>
+                                            <% }) %>
+                                    </div>
+                                    <% } %>
+                        </div>
+                    </div>
+
+                    <aside class="ud-right">
+                        <div class="ud-box">
+                            <div class="ud-box__title">Tổng kết</div>
+
+                            <div class="ud-row">
+                                <span>Ngày đặt</span>
+                                <b>
+                                    <%= fmtDate(o.createdAt) %>
+                                </b>
+                            </div>
+
+                            <div class="ud-row">
+                                <span>Thanh toán</span>
+                                <b>
+                                    <%= o.DaThanhToan ? "Đã thanh toán" : "Chưa thanh toán" %>
+                                </b>
+                            </div>
+
+                            <div class="ud-row">
+                                <span>Phương thức</span>
+                                <b>
+                                    <%= pay==="BANK" ? "Chuyển khoản" : "COD" %>
+                                </b>
+                            </div>
+
+                            <div class="ud-row ud-row--big">
+                                <span>Tổng tiền</span>
+                                <b>
+                                    <%= money(o.TongTien || 0) %>
+                                </b>
+                            </div>
+                        </div>
+
+                        <% if (pay==="BANK" && qr) { %>
+                            <div class="ud-box">
+                                <div class="ud-box__title">Chuyển khoản</div>
+
+                                <div class="ud-row"><span>Ngân hàng (BIN)</span><b>
+                                        <%= bank?.acqId || "" %>
+                                    </b></div>
+                                <div class="ud-row"><span>Số tài khoản</span><b>
+                                        <%= bank?.accountNo || "" %>
+                                    </b></div>
+                                <div class="ud-row"><span>Tên tài khoản</span><b>
+                                        <%= bank?.accountName || "" %>
+                                    </b></div>
+                                <div class="ud-row"><span>Số tiền</span><b>
+                                        <%= money(bank?.amount || o.TongTien || 0) %>
+                                    </b></div>
+                                <div class="ud-row"><span>Nội dung</span><b>
+                                        <%= bank?.addInfo || o.NoiDungChuyenKhoan || "" %>
+                                    </b></div>
+
+                                <div class="ud-qr" style="margin-top:10px;display:flex;justify-content:center;">
+                                    <img src="<%= qr %>" alt="VietQR"
+                                        style="max-width:280px;width:100%;border-radius:12px;">
+                                </div>
+                                <div style="margin-top:8px;font-size:13px;opacity:.85;text-align:center;">
+                                    Quét QR để chuyển khoản đúng nội dung.
+                                </div>
+                            </div>
+                            <% } %>
+
+                                <div class="ud-box">
+                                    <div class="ud-box__title">Giao hàng</div>
+                                    <div class="ud-row"><span>Họ tên</span><b>
+                                            <%= ship.HoTen || "" %>
+                                        </b></div>
+                                    <div class="ud-row"><span>SĐT</span><b>
+                                            <%= ship.SDT || "" %>
+                                        </b></div>
+                                    <div class="ud-row"><span>Địa chỉ</span><b>
+                                            <%= ship.DiaChi || "" %>
+                                        </b></div>
+                                    <% if (ship.GhiChu) { %>
+                                        <div class="ud-note">
+                                            <%= ship.GhiChu %>
+                                        </div>
+                                        <% } %>
+                                </div>
+                    </aside>
+                </div>
+            </div>
+    </section>

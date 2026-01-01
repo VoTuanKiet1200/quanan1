@@ -1,0 +1,117 @@
+<!-- views/taikhoan/doimatkhau-user.ejs -->
+<link rel="stylesheet" href="/css/user-doimk.css">
+
+<div class="pw-page">
+
+    <div class="pw-head">
+        <div class="pw-left">
+            <div class="pw-title">Đổi mật khẩu</div>
+            <div class="pw-sub">Nhập mật khẩu cũ và mật khẩu mới (tối thiểu 6 ký tự).</div>
+        </div>
+
+        <a class="pw-back" href="/taikhoan/dashboard">
+            <i class="bi bi-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <% const query=(typeof q !=='undefined' && q) ? q : {}; %>
+
+        <% if (query.err) { %>
+            <div class="pw-alert pw-alert--err">
+                <i class="bi bi-exclamation-triangle"></i>
+                <div>
+                    <% if (query.err==='missing_pw' ) { %>Vui lòng nhập đầy đủ thông tin.<% } %>
+                            <% if (query.err==='pw_short' ) { %>Mật khẩu mới tối thiểu 6 ký tự.<% } %>
+                                    <% if (query.err==='pw_mismatch' ) { %>Xác nhận mật khẩu mới không khớp.<% } %>
+                                            <% if (query.err==='pw_old_wrong' ) { %>Mật khẩu cũ không đúng.<% } %>
+                                                    <% if (query.err==='server' ) { %>Lỗi server. Vui lòng thử lại.<% }
+                                                            %>
+                                                            <% if (query.err==='avatar_invalid' ) { %>File avatar không
+                                                                hợp lệ (PNG/JPG/WEBP, tối đa 2MB).<% } %>
+                </div>
+            </div>
+            <% } %>
+
+                <% if (query.ok==='password' ) { %>
+                    <div class="pw-alert pw-alert--ok">
+                        <i class="bi bi-check-circle"></i>
+                        <div>Đổi mật khẩu thành công.</div>
+                    </div>
+                    <% } %>
+
+                        <div class="pw-card">
+                            <div class="pw-card-head">
+                                <div class="pw-card-title">Cập nhật mật khẩu</div>
+                                <div class="pw-card-sub">Vì lý do bảo mật, hãy dùng mật khẩu khó đoán.</div>
+                            </div>
+
+                            <form class="pw-form" method="POST" action="/taikhoan/doimatkhau">
+                                <div class="pw-field">
+                                    <label class="pw-label" for="MatKhauCu">Mật khẩu cũ</label>
+                                    <div class="pw-input-wrap">
+                                        <input id="MatKhauCu" class="pw-input" type="password" name="MatKhauCu"
+                                            required />
+                                        <button class="pw-eye" type="button" data-toggle="MatKhauCu"
+                                            aria-label="Hiện/ẩn mật khẩu">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="pw-grid">
+                                    <div class="pw-field">
+                                        <label class="pw-label" for="MatKhauMoi">Mật khẩu mới</label>
+                                        <div class="pw-input-wrap">
+                                            <input id="MatKhauMoi" class="pw-input" type="password" name="MatKhauMoi"
+                                                minlength="6" required />
+                                            <button class="pw-eye" type="button" data-toggle="MatKhauMoi"
+                                                aria-label="Hiện/ẩn mật khẩu">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="pw-hint">Tối thiểu 6 ký tự.</div>
+                                    </div>
+
+                                    <div class="pw-field">
+                                        <label class="pw-label" for="XacNhan">Xác nhận mật khẩu mới</label>
+                                        <div class="pw-input-wrap">
+                                            <input id="XacNhan" class="pw-input" type="password" name="XacNhan"
+                                                minlength="6" required />
+                                            <button class="pw-eye" type="button" data-toggle="XacNhan"
+                                                aria-label="Hiện/ẩn mật khẩu">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pw-actions">
+                                    <button class="pw-btn pw-btn--primary" type="submit">
+                                        <i class="bi bi-shield-lock"></i> Lưu mật khẩu
+                                    </button>
+
+                                    <a class="pw-btn" href="/taikhoan/thongtin">
+                                        <i class="bi bi-person"></i> Hồ sơ
+                                    </a>
+
+                                    <a class="pw-btn pw-btn--danger" href="/dangxuat">
+                                        <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+
+</div>
+
+<script>
+    document.querySelectorAll(".pw-eye").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const id = btn.getAttribute("data-toggle");
+            const input = document.getElementById(id);
+            const icon = btn.querySelector("i");
+            const show = input.type === "password";
+            input.type = show ? "text" : "password";
+            icon.className = show ? "bi bi-eye-slash" : "bi bi-eye";
+        });
+    });
+</script>

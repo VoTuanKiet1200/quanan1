@@ -1,0 +1,166 @@
+<!-- views/taikhoan/thongtin-user.ejs  (trang con giống style bạn đưa) -->
+<link rel="stylesheet" href="/css/tt-taikhoan.css">
+
+<section class="section account">
+    <div class="acc-wrap">
+        <div class="acc-head">
+            <div>
+                <h1 class="acc-title">Thông tin cá nhân</h1>
+                <p class="acc-sub">Cập nhật hồ sơ, ảnh đại diện và mật khẩu.</p>
+            </div>
+            <a class="acc-back" href="/taikhoan/dashboard">Về dashboard</a>
+        </div>
+
+        <% if (q?.ok) { %>
+            <div class="acc-alert acc-alert--ok">
+                <% if (q.ok==='profile' ) { %>Đã cập nhật thông tin.<% } %>
+                        <% if (q.ok==='avatar' ) { %>Đã cập nhật ảnh đại diện.<% } %>
+                                <% if (q.ok==='password' ) { %>Đã đổi mật khẩu.<% } %>
+            </div>
+            <% } %>
+
+                <% if (q?.err) { %>
+                    <div class="acc-alert acc-alert--err">
+                        <% if (q.err==='missing_name' ) { %>Vui lòng nhập họ và tên.<% } %>
+                                <% if (q.err==='email_exists' ) { %>Email đã được sử dụng.<% } %>
+                                        <% if (q.err==='missing_pw' ) { %>Vui lòng nhập đủ thông tin đổi mật khẩu.<% }
+                                                %>
+                                                <% if (q.err==='pw_short' ) { %>Mật khẩu mới tối thiểu 6 ký tự.<% } %>
+                                                        <% if (q.err==='pw_mismatch' ) { %>Xác nhận mật khẩu không khớp.
+                                                            <% } %>
+                                                                <% if (q.err==='pw_old_wrong' ) { %>Mật khẩu cũ không
+                                                                    đúng.<% } %>
+                                                                        <% if (q.err==='no_file' ) { %>Vui lòng chọn
+                                                                            ảnh.<% } %>
+                                                                                <% if (q.err==='avatar' ) { %>Không thể
+                                                                                    cập nhật avatar. Thử lại.<% } %>
+                                                                                        <% if (q.err==='server' ) { %>Có
+                                                                                            lỗi hệ thống. Thử lại.<% }
+                                                                                                %>
+                    </div>
+                    <% } %>
+
+                        <div class="acc-grid">
+
+                            <!-- LEFT -->
+                            <div class="card">
+                                <div class="card-hd">
+                                    <h3>Hồ sơ</h3>
+                                    <span class="badge">
+                                        <%= tk?.QuyenHan==='admin' ? 'Admin' : 'User' %>
+                                    </span>
+                                </div>
+
+                                <div class="profile">
+                                    <div class="avatar">
+                                        <img src="<%= tk?.HinhAnh && tk.HinhAnh.trim() ? tk.HinhAnh : '/images/user.png' %>"
+                                            alt="Avatar" onerror="this.src='/images/user.png'">
+                                    </div>
+
+                                    <div class="profile-meta">
+                                        <div class="profile-name">
+                                            <%= tk?.HoVaTen || '---' %>
+                                        </div>
+
+                                        <div class="profile-line">
+                                            <span class="k">Tên đăng nhập</span>
+                                            <span class="v">
+                                                <%= tk?.TenDangNhap || '---' %>
+                                            </span>
+                                        </div>
+
+                                        <div class="profile-line">
+                                            <span class="k">Email</span>
+                                            <span class="v">
+                                                <%= tk?.Email || 'Chưa cập nhật' %>
+                                            </span>
+                                        </div>
+
+                                        <div class="profile-line">
+                                            <span class="k">Trạng thái</span>
+                                            <span class="v">
+                                                <%= (tk?.KichHoat===1) ? 'Đang hoạt động' : 'Bị khóa' %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form class="form" action="/taikhoan/avatar" method="POST"
+                                    enctype="multipart/form-data">
+                                    <div class="row">
+                                        <label>Ảnh đại diện</label>
+                                        <input type="file" name="avatar" accept="image/png,image/jpeg,image/webp"
+                                            required>
+                                        <div class="hint">PNG/JPG/WEBP, tối đa 2MB.</div>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">Cập nhật ảnh</button>
+                                </form>
+                            </div>
+
+                            <!-- RIGHT -->
+                            <div class="stack">
+
+                                <div class="card">
+                                    <div class="card-hd">
+                                        <h3>Cập nhật thông tin</h3>
+                                    </div>
+
+                                    <form class="form" action="/taikhoan" method="POST">
+                                        <div class="grid2">
+                                            <div class="row">
+                                                <label>Họ và tên</label>
+                                                <input name="HoVaTen" value="<%= tk?.HoVaTen || '' %>"
+                                                    placeholder="Nhập họ và tên" required>
+                                            </div>
+
+                                            <div class="row">
+                                                <label>Email</label>
+                                                <input name="Email" type="email" value="<%= tk?.Email || '' %>"
+                                                    placeholder="email@example.com">
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <label>Tên đăng nhập</label>
+                                            <input value="<%= tk?.TenDangNhap || '' %>" disabled>
+                                            <div class="hint">Tên đăng nhập không thể thay đổi.</div>
+                                        </div>
+
+                                        <button class="btn btn-primary" type="submit">Lưu thay đổi</button>
+                                    </form>
+                                </div>
+
+                                <div class="card" id="doi-mat-khau">
+                                    <div class="card-hd">
+                                        <h3>Đổi mật khẩu</h3>
+                                    </div>
+
+                                    <form class="form" action="/taikhoan/doimatkhau" method="POST">
+                                        <div class="grid3">
+                                            <div class="row">
+                                                <label>Mật khẩu cũ</label>
+                                                <input name="MatKhauCu" type="password" placeholder="..........."
+                                                    autocomplete="current-password" required>
+                                            </div>
+
+                                            <div class="row">
+                                                <label>Mật khẩu mới</label>
+                                                <input name="MatKhauMoi" type="password" placeholder="..........."
+                                                    autocomplete="new-password" required>
+                                            </div>
+
+                                            <div class="row">
+                                                <label>Xác nhận</label>
+                                                <input name="XacNhan" type="password" placeholder="..........."
+                                                    autocomplete="new-password" required>
+                                            </div>
+                                        </div>
+
+                                        <button class="btn quenmk" type="submit">Đổi mật khẩu</button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+    </div>
+</section>

@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/logo.png">
+
+</head>
+
+<body>
+    <%- include('nav') %>
+        <main class="page">
+
+            <!-- SECTION 1: slider ảnh (tự chạy + nút) -->
+            <!-- SECTION 1: slider ảnh (tự chạy + nút ngang dưới ảnh) -->
+            <section class="screen s1" id="s1">
+                <div class="s1-wrap">
+                    <!-- s1-topbar kiểu category chips như hình -->
+                    <div class="s1-topbar">
+                        <a class="s1-cat" href="/danhmuc/mon_khai_vi">
+                            <span class="s1-cat__ico"><img src="/images/b6.png" alt=""></span>
+                            <span class="s1-cat__txt">Khai vị Thái</span>
+                        </a>
+
+                        <a class="s1-cat" href="/danhmuc/goi_som_tum">
+                            <span class="s1-cat__ico"><img src="/images/b5.png" alt=""></span>
+                            <span class="s1-cat__txt">Gỏi Som Tum</span>
+                        </a>
+
+                        <a class="s1-cat" href="/danhmuc/mon_cay">
+                            <span class="s1-cat__ico"><img src="/images/b7.png" alt=""></span>
+                            <span class="s1-cat__txt">Món cay</span>
+                        </a>
+
+                        <a class="s1-cat" href="/danhmuc/mon_chinh">
+                            <span class="s1-cat__ico"><img src="/images/b3.png" alt=""></span>
+                            <span class="s1-cat__txt">Món chính</span>
+                        </a>
+
+                        <a class="s1-cat" href="/danhmuc/trang_mieng">
+                            <span class="s1-cat__ico"><img src="/images/b8.jpg" alt=""></span>
+                            <span class="s1-cat__txt">Tráng miệng</span>
+                        </a>
+
+                        <a class="s1-cat" href="/danhmuc/nuoc_uong">
+                            <span class="s1-cat__ico"><img src="/images/b9.png" alt=""></span>
+                            <span class="s1-cat__txt">Nước uống</span>
+                        </a>
+
+                        <a class="s1-cat" href="/danhmuc/combo_thai">
+                            <span class="s1-cat__ico"><img src="/images/b1.jpg" alt=""></span>
+                            <span class="s1-cat__txt">Combo Thái</span>
+                        </a>
+
+
+                    </div>
+                    <div class="s1-slider" data-slider>
+                        <div class="s1-viewport">
+                            <div class="s1-track">
+
+                                <!-- SLIDE 1 -->
+                                <div class="s1-slide">
+                                    <div class="s1-content anh1">
+                                        <div class="s1-text text1">
+                                            <div class="s1-kicker">🇹🇭 Hương vị Thái • Cay nồng • Chuẩn vị</div>
+                                            <h2 class="s1-title">Món ăn Thái Lan<br>đậm đà đúng chuẩn</h2>
+                                            <p class="s1-desc">Tom Yum, Pad Thái, cà ri xanh… nguyên liệu tươi, nêm nếm
+                                                chuẩn vị. Đặt ngay để thưởng thức nóng hổi.</p>
+                                            <div class="s1-actions">
+                                                <a class="s1-btn" href="/">Đặt ngay</a>
+                                                <a class="s1-link" href="/">Xem thực đơn</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="s1-media midia1">
+                                            <img src="/images/b1.jpg" alt="Món Thái Lan">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SLIDE 2: XÔI XOÀI -->
+                                <div class="s1-slide">
+                                    <div class="s1-content anh2">
+                                        <div class="s1-text text2">
+                                            <div class="s1-kicker">🥭 Tráng miệng Thái • Ngọt dịu</div>
+                                            <h2 class="s1-title">Xôi xoài Thái<br>béo thơm nước cốt dừa</h2>
+                                            <p class="s1-desc">Xôi dẻo thơm, xoài chín ngọt, rưới nước cốt dừa béo ngậy.
+                                                Món “must-try” cho tín đồ món Thái.</p>
+                                            <div class="s1-actions">
+                                                <a class="s1-btn" href="/">Đặt xôi xoài</a>
+                                                <a class="s1-link" href="/">Xem món ngọt</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="s1-media">
+                                            <img src="/images/b2.png" alt="Xôi xoài">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SLIDE 3: SƯỜN CAY THÁI -->
+                                <div class="s1-slide">
+                                    <div class="s1-content anh3">
+                                        <div class="s1-text text3">
+                                            <div class="s1-kicker">🌶️ Cay Thái • Đậm vị • Bùng nổ</div>
+                                            <h2 class="s1-title">Sườn cay Thái<br>đã miệng cực cuốn</h2>
+                                            <p class="s1-desc">Sườn mềm, sốt cay chua ngọt kiểu Thái, ăn kèm rau thơm.
+                                                Càng ăn càng ghiền.</p>
+                                            <div class="s1-actions">
+                                                <a class="s1-btn" href="/">Đặt sườn cay</a>
+                                                <a class="s1-link" href="/">Xem món cay</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="s1-media">
+                                            <img src="/images/b4.png" alt="Sườn cay Thái">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SLIDE 4: GỎI ĐU ĐỦ -->
+                                <div class="s1-slide">
+                                    <div class="s1-content anh4">
+                                        <div class="s1-text text4">
+                                            <div class="s1-kicker">🥗 Som Tum • Giòn • Chua cay</div>
+                                            <h2 class="s1-title">Gỏi đu đủ Thái<br>giòn ngon thanh mát</h2>
+                                            <p class="s1-desc">Đu đủ bào sợi giòn, vị chua cay mặn ngọt hài hòa, thêm
+                                                đậu phộng thơm bùi.</p>
+                                            <div class="s1-actions">
+                                                <a class="s1-btn" href="/">Đặt gỏi đu đủ</a>
+                                                <a class="s1-link" href="/">Xem món khai vị</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="s1-media">
+                                            <img src="/images/b5.png" alt="Gỏi đu đủ">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- dots -->
+                            <div class="s1-dots" aria-label="Chọn ảnh"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="trangtri tt1" id="tt1">
+                <div class="tt1-row">
+                    <div class="tt1-box ico1" data-aos="flip-left">
+                        <div class="tt1-ico ">
+                            <img src="/images/rau.png" alt="">
+                        </div>
+                        <div class="tt1-txt">Rau tươi mỗi ngày</div>
+                        <span class="tt1-sub">Nhập mới mỗi sáng • Tươi sạch</span>
+                    </div>
+
+                    <div class="tt1-box ico2" data-aos="flip-left">
+                        <div class="tt1-ico ">
+                            <img src="/images/an.png" alt="">
+                        </div>
+                        <div class="tt1-txt">Món ăn đa dạng</div>
+                        <span class="tt1-sub">Món Thái chuẩn vị • Nhiều lựa chọn</span>
+                    </div>
+
+                    <div class="tt1-box ico3" data-aos="flip-left">
+                        <div class="tt1-ico ">
+                            <img src="/images/nuoc.png" alt="">
+                        </div>
+                        <div class="tt1-txt">Nước giải khác đỉnh cao</div>
+                        <span class="tt1-sub">Nước ép • Trà Thái • Giải nhiệt</span>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <section class="screen s2" id="s2" data-aos="zoom-in">
+                <% const money=(n)=> Number(n||0).toLocaleString('vi-VN') + "₫"; %>
+
+                    <div class="s2-wrap">
+                        <div class="s2-decor" aria-hidden="true"></div>
+
+                        <div class="s2-head">
+                            <div>
+                                <h2 class="s2-title">Món nổi bật</h2>
+                                <div class="s2-sub">
+                                    <%= dm ? ("Đang lọc theo danh mục: " + dm) : " 6 món mới nhất / bán chạy" %>
+                                </div>
+                            </div>
+                            <a class="s2-more" href="/thucdon">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+                        </div>
+
+                        <div class="s2-grid">
+                            <% (monan6 || []).forEach(ma=> {
+                                const g = Number(ma.Gia || 0);
+                                const gkm = Number(ma.GiaKhuyenMai || 0);
+                                const hasSale = gkm > 0 && gkm < g; const priceNow=hasSale ? gkm : g; const
+                                    out=Number(ma.SoLuongTon || 0) <=0; const img=(ma.HinhAnh && ma.HinhAnh.trim()) ?
+                                    ma.HinhAnh : "/images/robo.png" ; const detailUrl=ma.Slug ? ("/monan/" + ma.Slug)
+                                    : "#" ; %>
+
+                                    <article class="s2-card">
+                                        <a class="s2-img" href="<%= detailUrl %>">
+                                            <img src="<%= img %>" alt="<%= ma.TenMon %>" loading="lazy">
+                                        </a>
+
+                                        <div class="s2-body">
+                                            <div class="s2-row">
+                                                <h3 class="s2-name">
+                                                    <%= ma.TenMon %>
+                                                </h3>
+                                                <span class="s2-cat">
+                                                    <%= ma.DanhMucId?.TenDanhMuc || "" %>
+                                                </span>
+                                            </div>
+
+                                            <div class="s2-price">
+                                                <b>
+                                                    <%= money(priceNow) %>
+                                                </b>
+                                                <% if (hasSale) { %>
+                                                    <del>
+                                                        <%= money(g) %>
+                                                    </del>
+                                                    <% } %>
+                                            </div>
+
+                                            <div class="s2-actions">
+                                                <button class="s2-btn s2-btn--primary" type="button"
+                                                    onclick="__addToCart('<%= ma._id %>', 1, this, document.getElementById('img-<%= ma._id %>'))"
+                                                    <%=out ? 'disabled aria-disabled="true"' : '' %>
+                                                    >
+                                                    <%= out ? 'Hết hàng' : 'Thêm vào giỏ' %>
+                                                </button>
+
+
+                                                <a class="s2-btn" href="<%= detailUrl %>">Chi tiết</a>
+                                            </div>
+                                        </div>
+                                    </article>
+
+                                    <% }) %>
+
+                                        <% if (!monan6 || monan6.length===0) { %>
+                                            <div class="s2-empty">Chưa có món ăn để hiển thị.</div>
+                                            <% } %>
+                        </div>
+                    </div>
+            </section>
+            <section class="screen s3" id="s3">
+                <div class="s3-wrap">
+                    <!-- trái: ảnh -->
+                    <div class="s3-left" data-aos="fade-right">
+                        <img class="s3-img" src="/images/lau.png" alt="Thai Aroma">
+                    </div>
+
+                    <!-- phải: text -->
+                    <div class="s3-right" data-aos="zoom-in-up">
+                        <div class="s3-kicker">Thai Aroma • Fresh Daily • Chuẩn vị Thái</div>
+
+                        <h2 class="s3-title">Hương vị Thái chuẩn vị<br>đậm đà – thơm nồng</h2>
+
+                        <p class="s3-desc">
+                            Thai Aroma mang đến trải nghiệm ẩm thực Thái Lan đúng chuẩn: Tom Yum chua cay, Pad Thái đậm
+                            vị,
+                            sườn cay bùng nổ và Som Tum giòn mát. Tất cả được nấu mới mỗi ngày với nguyên liệu tươi,
+                            gia vị chuẩn Thái, cân bằng vị chua – cay – mặn – ngọt hài hòa.
+                        </p>
+
+                        <p class="s3-desc">
+                            Đặt món cực nhanh, giao tận nơi vẫn nóng hổi. Phù hợp cho bữa trưa văn phòng, tụ tập bạn bè
+                            hoặc “thèm cay” lúc nửa đêm. Theo dõi món mới mỗi tuần và các combo tiết kiệm theo mùa.
+                        </p>
+
+                        <ul class="s3-list">
+                            <li> Nấu mới mỗi ngày • an tâm chất lượng</li>
+                            <li> Gia vị chuẩn Thái • có mức cay tuỳ chọn</li>
+                            <li> Giao nhanh • đóng gói sạch sẽ, giữ nhiệt</li>
+                        </ul>
+
+                        <div class="s3-actions">
+                            <a class="s3-btn" href="#s2">Xem món</a>
+                            <a class="s3-link" href="/lienhe">Liên hệ</a>
+                        </div>
+                        <div class="s3-decor" aria-hidden="true" data-aos="fade-up">
+                            <img src="/images/xa1.png" alt="">
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="screen s7">
+                <div class="s7-wrap">
+                    <!-- LEFT -->
+                    <div class="s7-left" data-aos="fade-right">
+                        <div class="s7-brand">THAI AROMA</div>
+
+                        <h2 class="s7-title">
+                            Thai<br />
+                            Experience
+                        </h2>
+
+                        <p class="s7-text">
+                            Từ khoảnh khắc bạn ghé Thai Aroma, bạn sẽ cảm nhận ngay hương vị Thái Lan đúng chuẩn: thơm
+                            nồng – chua cay – đậm đà.
+                            Mỗi món ăn được nấu mới mỗi ngày với nguyên liệu tươi, gia vị chuẩn Thái, cân bằng vị chua –
+                            cay – mặn – ngọt hài hòa.
+                            Từ Tom Yum nóng hổi, Pad Thai chuẩn vị đến Som Tum giòn mát, tất cả đều được chăm chút để
+                            bạn “ăn một lần nhớ mãi”.
+                        </p>
+
+                        <p class="s7-text">
+                            Thai Aroma phục vụ nhanh, đóng gói gọn gàng, giữ nhiệt tốt để bạn thưởng thức trọn vị dù ăn
+                            tại chỗ hay đặt mang về.
+                            Bạn có thể chọn combo tiện lợi, thêm nước uống/ tráng miệng và tùy chọn mức cay theo khẩu
+                            vị. Dù là bữa trưa vội hay
+                            buổi tối thư thả, Thai Aroma luôn mang đến trải nghiệm ngon – sạch – chuẩn vị.
+                        </p>
+
+                        <div class="s7-footer">
+                            <div class="s7-site">THAIAROMA.VN</div>
+                            <span class="s7-line" aria-hidden="true"></span>
+                            <div class="s7-page">MENU</div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="s7-right" data-aos="zoom-in-up">
+                        <div class="s7-gallery">
+                            <div class="s7-col s7-col--mid">
+                                <figure class="s7-img">
+                                    <img src="/images/b2.jpg" alt="Food 1" />
+                                </figure>
+                                <figure class="s7-img">
+                                    <img src="/images/b3.jpg" alt="Food 2" />
+                                </figure>
+                            </div>
+
+                            <div class="s7-col s7-col--big">
+                                <figure class="s7-img s7-img--big">
+                                    <img src="/images/b5.jpg" alt="Food 3" />
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="screen s4" id="s4">
+                <div class="s4-wrap" data-aos="zoom-in">
+                    <header class="s4-head">
+                        <div class="s4-eyebrow">OUR AWESOME SERVICES</div>
+                        <h2 class="s4-title">Dịch vụ nổi bật</h2>
+                        <p class="s4-sub">Chuẩn vị Thái • Nấu mới mỗi ngày • Giao nhanh, đóng gói sạch sẽ</p>
+                    </header>
+
+                    <div class="s4-grid">
+                        <!-- 1 -->
+                        <article class="s4-item">
+                            <div class="s4-ico"><i class="bi bi-egg-fried"></i></div>
+                            <div class="s4-txt">
+                                <h3>Quality Food</h3>
+                                <p>Nguyên liệu tươi, nấu mới mỗi ngày. Món lên vị đúng chuẩn, ăn là ghiền.</p>
+                            </div>
+                        </article>
+
+                        <!-- 2 -->
+                        <article class="s4-item">
+                            <div class="s4-ico"><i class="bi bi-person-badge"></i></div>
+                            <div class="s4-txt">
+                                <h3>Cook like a Chef</h3>
+                                <p>Đầu bếp am hiểu vị Thái: chua – cay – mặn – ngọt cân bằng, thơm nồng gia vị.</p>
+                            </div>
+                        </article>
+
+                        <!-- 3 -->
+                        <article class="s4-item">
+                            <div class="s4-ico"><i class="bi bi-basket2"></i></div>
+                            <div class="s4-txt">
+                                <h3>Ingredients</h3>
+                                <p>Chọn lọc nguyên liệu theo ngày, gia vị chuẩn Thái, đảm bảo độ tươi và an tâm.</p>
+                            </div>
+                        </article>
+
+                        <!-- 4 -->
+                        <article class="s4-item">
+                            <div class="s4-ico"><i class="bi bi-book"></i></div>
+                            <div class="s4-txt">
+                                <h3>Easy Recipes</h3>
+                                <p>Menu rõ ràng, combo theo mùa, gợi ý món ăn nhanh theo khẩu vị và mức cay.</p>
+                            </div>
+                        </article>
+
+                        <!-- 5 -->
+                        <article class="s4-item">
+                            <div class="s4-ico"><i class="bi bi-fire"></i></div>
+                            <div class="s4-txt">
+                                <h3>Serve Hot</h3>
+                                <p>Đóng gói giữ nhiệt, giao tới vẫn nóng hổi. Ăn trưa văn phòng hay tụ tập đều hợp.</p>
+                            </div>
+                        </article>
+
+                        <!-- 6 -->
+                        <article class="s4-item">
+                            <div class="s4-ico"><i class="bi bi-truck"></i></div>
+                            <div class="s4-txt">
+                                <h3>Fast Delivery</h3>
+                                <p>Đặt nhanh – xác nhận nhanh – giao nhanh. Theo dõi đơn dễ dàng.</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+            <!-- SECTION 5: nền 2 màu + “phô mai chảy” ngăn cách -->
+            <section class="screen s5" id="s5" data-aos="fade-up">
+                <!-- rìa “phô mai chảy” -->
+                <div class="s5-drip" aria-hidden="true">
+                    <svg viewBox="0 0 1200 160" preserveAspectRatio="none">
+                        <path d="M0,40
+           C120,40 160,120 260,120
+           C360,120 400,40 500,40
+           C620,40 660,130 760,130
+           C860,130 900,40 1000,40
+           C1100,40 1135,110 1200,110
+           L1200,160 L0,160 Z" fill="#ec6868" />
+                    </svg>
+                </div>
+
+                <!-- nội dung (để trống hoặc thêm vào) -->
+                <div class="s5-wrap">
+                    <div class="s5-head">
+                        <div class="s5-kicker">THAI AROMA</div>
+                        <h2 class="s5-title">Đặt món nhanh • Nhận món nóng</h2>
+                        <p class="s5-desc">
+                            Ưu đãi mỗi tuần cho fan đồ Thái. Chọn mức cay, thêm topping, giao tận nơi vẫn giữ nhiệt.
+                        </p>
+                    </div>
+
+                    <div class="s5-grid s5-grid--img">
+                        <!-- card 1 -->
+                        <a class="s5-cardImg" href="#s2">
+                            <div class="s5-cardImg__media">
+                                <img src="/images/daubep.png" alt="Bếp trưởng Chef Somchai" />
+                            </div>
+                            <div class="s5-cardImg__body">
+                                <h3 class="s5-cardImg__title">Chef Duy</h3>
+                                <p class="s5-cardImg__desc">Bếp trưởng • Chuyên món Thái chuẩn vị, cân bằng chua – cay –
+                                    mặn – ngọt.</p>
+                            </div>
+                        </a>
+
+                        <!-- card 2 -->
+                        <a class="s5-cardImg" href="#s2">
+                            <div class="s5-cardImg__media">
+                                <img src="/images/db1.png" alt="Đầu bếp món nóng Chef Anurak" />
+                            </div>
+                            <div class="s5-cardImg__body">
+                                <h3 class="s5-cardImg__title">Chef Cao</h3>
+                                <p class="s5-cardImg__desc">Đầu bếp món nóng • Tom Yum, cà ri, món xào; lên món nhanh,
+                                    giữ trọn hương thơm.</p>
+                            </div>
+                        </a>
+
+                        <!-- card 3 -->
+                        <a class="s5-cardImg" href="/lienhe">
+                            <div class="s5-cardImg__media">
+                                <img src="/images/db2.png" alt="Đầu bếp gỏi & tráng miệng Chef Kiet" />
+                            </div>
+                            <div class="s5-cardImg__body">
+                                <h3 class="s5-cardImg__title">Chef Hung</h3>
+                                <p class="s5-cardImg__desc">Gỏi & tráng miệng • Som Tum giòn mát, nước sốt pha chuẩn;
+                                    tráng miệng tươi, trình bày đẹp.</p>
+                            </div>
+                        </a>
+                    </div>
+
+
+                    <div class="s5-cta">
+                        <a class="s5-btn" href="#s2">Xem 6 món nổi bật</a>
+                        <span class="s5-note">Mở cửa 10:00 – 22:00 • Hỗ trợ đặt nhanh qua chat</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        <%- include('footer') %>
+</body>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 800,
+        once: false,
+        mirror: true,
+        offset: 120,
+        anchorPlacement: 'center',
+        // Cài đặt toàn cục:
+        useClassNames: true, // nếu đúng, sẽ thêm nội dung của `data-aos` dưới dạng lớp khi cuộn
+        debounceDelay: 50, // độ trễ trên debounce khi thay đổi kích thước cửa sổ (nâng cao)
+        throttleDelay: 99, // độ trễ trên throttle khi cuộn trang (nâng cao)          
+        delay: 0, // giá trị từ 0 đến 3000, với bước 50ms
+        easing: 'ease', // độ trơn mặc định cho các hoạt ảnh AOS
+    });
+
+    window.addEventListener('load', () => AOS.refresh());
+</script>
+<script>
+    (function () {
+        const sliders = document.querySelectorAll('[data-slider]');
+        if (!sliders.length) return;
+
+        sliders.forEach(slider => {
+            const track = slider.querySelector('.s1-track');
+            const slides = Array.from(slider.querySelectorAll('.s1-slide'));
+            const dotsWrap = slider.querySelector('.s1-dots');
+            const viewport = slider.querySelector('.s1-viewport');
+
+            if (!track || slides.length === 0 || !dotsWrap) return;
+
+            let index = 0;
+            let timer = null;
+            const delay = 3200;
+
+            // tạo dots = đúng số lượng ảnh
+            const dots = slides.map((_, i) => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 's1-dot' + (i === 0 ? ' is-active' : '');
+                b.setAttribute('aria-label', 'Ảnh ' + (i + 1));
+                b.addEventListener('click', () => go(i));
+                dotsWrap.appendChild(b);
+                return b;
+            });
+
+            function updateDots() {
+                dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+            }
+
+            function render() {
+                track.style.transform = `translateX(${-index * 100}%)`;
+                updateDots();
+            }
+
+            function go(i) {
+                index = Math.max(0, Math.min(slides.length - 1, i));
+                render();
+                restart();
+            }
+
+            function nextAuto() {
+                index = (index + 1) % slides.length; // ✅ chạy vòng
+                render();
+            }
+
+            function start() {
+                stop();
+                timer = setInterval(nextAuto, delay);
+            }
+
+            function stop() {
+                if (timer) clearInterval(timer);
+                timer = null;
+            }
+
+            function restart() {
+                start();
+            }
+
+            // pause khi hover
+            if (viewport) {
+                viewport.addEventListener('mouseenter', stop);
+                viewport.addEventListener('mouseleave', start);
+            }
+
+            render();
+            start();
+        });
+    })();
+</script>
+
+
+
+
+
+
+
+</html>

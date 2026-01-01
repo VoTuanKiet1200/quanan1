@@ -1,0 +1,122 @@
+<!-- views/admin/monan_list.ejs -->
+<link rel="stylesheet" href="/css/monanql.css">
+
+<div class="page-monan">
+    <div class="toolbar-monan">
+        <div class="toolbar-left-monan">
+            <h2 class="title-monan">Quản lý món ăn</h2>
+            <div class="subtitle-monan">Danh sách món ăn</div>
+        </div>
+
+        <input class="search-monan" placeholder="Tìm theo tên / danh mục / slug..." oninput="
+      const q=this.value.toLowerCase();
+      document.querySelectorAll('.table-monan tbody tr').forEach(tr=>{
+        tr.style.display = tr.innerText.toLowerCase().includes(q) ? '' : 'none';
+      });
+    " />
+
+        <a class="btn-monan btn-monan--primary" href="/admin/monan/them">+Thêm</a>
+
+        <!-- Nếu chưa làm Excel thì xoá 3 nút này -->
+        <a class="btn-monan btn-monan-xuat-excel" href="/admin/monan/xuat-excel">
+            <i class="bi bi-arrow-right-square-fill"></i> Xuất Excel
+        </a>
+
+        <form class="excel-form" action="/admin/monan/nhap-excel" method="POST" enctype="multipart/form-data">
+            <input class="excel-file" type="file" name="excel" accept=".xlsx,.xls" required>
+            <button class="btn-monan btn-monan-nhap-excel" type="submit">
+                <i class="bi bi-arrow-down-square-fill"></i> Nhập Excel
+            </button>
+        </form>
+
+        <a class="btn-monan btn-monan-mau" href="/admin/monan/mau-excel">
+            <i class="bi bi-arrow-down-square-fill"></i> Tải file mẫu
+        </a>
+    </div>
+
+    <div class="table-wrap-monan">
+        <table class="table-monan">
+            <thead>
+                <tr>
+                    <th>Ảnh</th>
+                    <th>Tên</th>
+                    <th>Giá</th>
+                    <th>Tồn</th>
+                    <th>Danh mục</th>
+                    <th>Kích hoạt</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% (items || []).forEach(ma=> { %>
+                    <tr>
+                        <td>
+                            <img class="img-monan" src="<%= ma.HinhAnh || '/images/robo.png' %>" alt="">
+                        </td>
+
+                        <td class="name-monan">
+                            <div class="name-monan__main">
+                                <%= ma.TenMon %>
+                            </div>
+                            <div class="name-monan__sub">
+                                <%= ma.Slug || '' %>
+                            </div>
+                        </td>
+
+                        <td class="price-monan">
+                            <% const gia=(ma.GiaKhuyenMai && ma.GiaKhuyenMai> 0 && ma.GiaKhuyenMai < ma.Gia) ?
+                                    ma.GiaKhuyenMai : ma.Gia; %>
+                                    <span class="price-monan__value">
+                                        <%= Number(gia||0).toLocaleString('vi-VN') %>₫
+                                    </span>
+
+                                    <% if (ma.GiaKhuyenMai && ma.GiaKhuyenMai> 0 && ma.GiaKhuyenMai < ma.Gia) { %>
+                                            <span class="price-monan__old">
+                                                <%= Number(ma.Gia||0).toLocaleString('vi-VN') %>₫
+                                            </span>
+                                            <% } %>
+                        </td>
+
+                        <td>
+                            <% const sl=Number(ma.SoLuongTon ?? 0); %>
+                                <span
+                                    class="chip-monan chip-monan--sl <%= sl <= 0 ? 'is-zero' : (sl < 5 ? 'is-low' : 'is-ok') %>">
+                                    <%= sl %>
+                                </span>
+                        </td>
+
+                        <td>
+                            <span class="chip-monan">
+                                <%= ma.DanhMucId?.TenDanhMuc || ma.DanhMuc?.TenDanhMuc || '' %>
+                            </span>
+                        </td>
+
+                        <td>
+                            <% if (Number(ma.KichHoat)===1) { %>
+                                <span class="badge-monan badge-monan--on">BẬT</span>
+                                <% } else { %>
+                                    <span class="badge-monan badge-monan--off">TẮT</span>
+                                    <% } %>
+                        </td>
+
+                        <td>
+                            <div class="hanhdong-monan">
+                                <a class="btn-monan btn-monan--sm btn-monan-sua"
+                                    href="/admin/monan/sua/<%= ma._id %>">Sửa</a>
+
+                                <form class="form-monan-inline" action="/admin/monan/xoa/<%= ma._id %>" method="POST"
+                                    onsubmit="return confirm('Xóa món ăn này?')">
+                                    <button class="btn-monan btn-monan--sm btn-monan-danger" type="submit">Xóa</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+
+        <!-- Nếu bạn chưa có pagination thì xoá dòng dưới -->
+        <%- include('../partials/pagination', { pagination, baseUrl }) %>
+    </div>
+</div>

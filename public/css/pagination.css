@@ -1,0 +1,79 @@
+.pager {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #fff;
+
+}
+
+.pager__info {
+    font-size: 13px;
+    color: rgba(17, 17, 17, .7);
+}
+
+.pager__actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.pager__btn {
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(17, 17, 17, .14);
+    background: #fff;
+    color: #111;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.pager__btn--active {
+    background: rgba(37, 99, 235, .12);
+    border-color: rgba(37, 99, 235, .35);
+}
+
+.pager__btn--disabled {
+    opacity: .45;
+    pointer-events: none;
+}
+
+@media (max-width: 720px) {
+    .pager {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pager__actions {
+        justify-content: center;
+    }
+}
+
+.pager__jump {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+.pager__input {
+    width: 90px;
+    height: 38px;
+    padding: 0 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, .15);
+    outline: none;
+}
+
+.pager__go {
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, .15);
+    background: #fff;
+    cursor: pointer;
+}

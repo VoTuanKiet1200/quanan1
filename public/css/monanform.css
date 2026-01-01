@@ -1,0 +1,152 @@
+/* public/css/monanform.css */
+.monanform {
+    width: 100%;
+}
+
+.monanform-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.monanform-title {
+    margin: 0;
+    font-size: 22px;
+}
+
+.monanform-sub {
+    opacity: .75;
+    margin-top: 4px;
+}
+
+.monanform-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    color: inherit;
+}
+
+.monanform-card {
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    background: rgba(255, 255, 255, .03);
+    padding: 16px;
+}
+
+.monanform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.monanform-field--full {
+    grid-column: 1 / -1;
+}
+
+.monanform-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.req {
+    color: #ff6b6b;
+}
+
+.monanform-input,
+.monanform-textarea {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(83, 83, 83, 0.06);
+    color: inherit;
+    padding: 10px 12px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.monanform-textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.monanform-hint {
+    display: block;
+    opacity: .7;
+    margin-top: 6px;
+    font-size: 12px;
+}
+
+.monanform-upload {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.monanform-preview {
+    width: 140px;
+    height: 140px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    overflow: hidden;
+    background: rgba(0, 0, 0, .25);
+}
+
+.monanform-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.monanform-check {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 10px;
+    opacity: .9;
+}
+
+.monanform-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.monanform-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    color: inherit;
+}
+
+.monanform-btn--primary {
+    background: rgba(212, 255, 58, .95);
+    border-color: rgba(212, 255, 58, .95);
+    color: #111;
+    font-weight: 700;
+}
+
+@media (max-width: 860px) {
+    .monanform-grid {
+        grid-template-columns: 1fr;
+    }
+}

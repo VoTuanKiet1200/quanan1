@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+        <%= title || "Dashboard" %>
+    </title>
+
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/logo2.png">
+</head>
+
+<body>
+    <%- include('../nav') %>
+
+        <% const a=(typeof active !=='undefined' ) ? active : '' ; const ten=(session && (session.HoTen ||
+            session.HoVaTen)) ? (session.HoTen || session.HoVaTen) : 'Admin' ; const isAdmin=!!(session &&
+            (session.VaiTro==='admin' || session.QuyenHan==='admin' )); %>
+
+            <div class="dash">
+                <aside class="dash-sidebar">
+                    <a class="dash-brand-a" href="/admin/dashboard">
+                        <div class="dash-brand">
+                            <div class="dash-logo">ROBO</div>
+                            <div>
+                                <div class="dash-brand-title">ADMIN</div>
+                                <div class="dash-brand-sub">Quản trị hệ thống</div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <nav class="dash-nav">
+
+                        <div class="dash-nav-group">
+                            <div class="dash-nav-title">Tổng quan</div>
+
+                            <a class="dash-link <%= a==='dashboard'?'active':'' %>" href="/admin/dashboard">
+                                <i class="bi bi-speedometer2"></i>
+                                <span class="dash-text">Dashboard</span>
+                            </a>
+                        </div>
+
+                        <div class="dash-nav-group">
+                            <div class="dash-nav-title">Quản lý</div>
+
+                            <!-- ✅ ĐỔI SANG CRUD MÓN ĂN -->
+                            <a class="dash-link <%= a==='monan'?'active':'' %>" href="/admin/monan">
+                                <i class="bi bi-box-seam"></i>
+                                <span class="dash-text">Món ăn</span>
+                            </a>
+
+                            <a class="dash-link <%= a==='danhmuc'?'active':'' %>" href="/admin/danhmuc">
+                                <i class="bi bi-diagram-3"></i>
+                                <span class="dash-text">Danh mục</span>
+                            </a>
+
+                            <a class="dash-link <%= a==='donhang'?'active':'' %>" href="/admin/donhang">
+                                <i class="bi bi-receipt"></i>
+                                <span class="dash-text">Đơn hàng</span>
+                            </a>
+
+                            <a class="dash-link <%= a==='khachhang'?'active':'' %>" href="/admin/khachhang/quanly">
+                                <i class="bi bi-people"></i>
+                                <span class="dash-text">Khách hàng</span>
+                            </a>
+                        </div>
+
+                        <div class="dash-nav-group">
+                            <div class="dash-nav-title">Hệ thống</div>
+
+                            <a class="dash-link <%= a==='taikhoan'?'active':'' %>" href="/admin/taikhoan/quanly">
+                                <i class="bi bi-person-badge"></i>
+                                <span class="dash-text">Tài khoản</span>
+                            </a>
+
+                            <a class="dash-link dangxuat" href="/dangxuat">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span class="dash-text">Đăng xuất</span>
+                            </a>
+                        </div>
+
+                    </nav>
+
+                    <div class="dash-bottom">
+                        <div class="dash-usercard">
+                            <div class="dash-avatar">
+                                <%= ten.slice(0,1).toUpperCase() %>
+                            </div>
+                            <div>
+                                <div class="dash-user">
+                                    <%= ten %>
+                                </div>
+                                <div class="dash-role">
+                                    <%= isAdmin ? "Administrator" : "User" %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <main class="dash-main">
+                    <header class="dash-topbar">
+                        <div class="dash-topbar-left">
+                            <button class="dash-toggle" type="button" aria-label="Toggle sidebar"
+                                onclick="document.body.classList.toggle('dash-collapsed');">
+                                ☰
+                            </button>
+
+                            <h2 class="dash-page-title">
+                                <%= title || "" %>
+                            </h2>
+                        </div>
+
+                        <div class="dash-topbar-right">
+                            <div class="dash-pill">Admin Panel</div>
+                        </div>
+                    </header>
+
+                    <section class="dash-content">
+                        <%- body %>
+                    </section>
+                </main>
+            </div>
+
+</body>
+
+</html>

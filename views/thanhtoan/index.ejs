@@ -1,0 +1,177 @@
+<!-- views/thanhtoan/index.ejs -->
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh toán</title>
+
+    <link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/thanhtoan.css">
+</head>
+
+<body>
+    <% const money=(n)=> Number(n||0).toLocaleString('vi-VN') + "₫";
+        const c = cart || { items:[], TongSoLuong:0, TongTien:0 };
+        const items = c.items || [];
+        const err = (typeof error !== "undefined") ? error : "";
+        %>
+
+        <section class="tt">
+            <%- include('../nav', { active: 'giohang' }) %>
+
+                <div class="tt-wrap">
+                    <div class="tt-head">
+                        <h1 class="tt-title">Thanh toán</h1>
+                        <div class="tt-sub">
+                            <b>
+                                <%= c.TongSoLuong || 0 %>
+                            </b> món • <b>
+                                <%= money(c.TongTien || 0) %>
+                            </b>
+                        </div>
+                    </div>
+
+                    <% if (err) { %>
+                        <div class="tt-alert">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <span>
+                                <%= err %>
+                            </span>
+                        </div>
+                        <% } %>
+
+                            <% if (!items.length) { %>
+                                <div class="tt-empty">
+                                    <i class="bi bi-bag-x"></i>
+                                    <div>
+                                        <div class="tt-empty__title">Giỏ hàng trống</div>
+                                        <div class="tt-empty__sub">Bạn cần thêm món trước khi thanh toán.</div>
+                                        <a class="tt-btn" href="/thucdon">Về thực đơn</a>
+                                    </div>
+                                </div>
+                                <% } else { %>
+
+                                    <div class="tt-grid">
+                                        <!-- LEFT: form -->
+                                        <div class="tt-card">
+                                            <h2 class="tt-h2">Thông tin giao hàng</h2>
+
+                                            <form method="POST" action="/thanhtoan" class="tt-form">
+                                                <div class="tt-row">
+                                                    <label>Họ tên</label>
+                                                    <input name="HoTen" required placeholder="Nhập họ tên" />
+                                                </div>
+
+                                                <div class="tt-row">
+                                                    <label>Số điện thoại</label>
+                                                    <input name="SDT" required placeholder="Ví dụ: 09xxxxxxxx" />
+                                                </div>
+
+                                                <div class="tt-row">
+                                                    <label>Địa chỉ</label>
+                                                    <input name="DiaChi" required
+                                                        placeholder="Số nhà, đường, phường/xã, quận/huyện..." />
+                                                </div>
+
+                                                <div class="tt-row">
+                                                    <label>Ghi chú</label>
+                                                    <textarea name="GhiChu" rows="3"
+                                                        placeholder="Ví dụ: ít cay, giao giờ trưa..."></textarea>
+                                                </div>
+
+                                                <h2 class="tt-h2">Phương thức thanh toán</h2>
+                                                <div class="tt-pay">
+                                                    <label class="tt-pay__opt">
+                                                        <input type="radio" name="Pay" value="COD" checked>
+                                                        <span>
+                                                            <b>COD</b>
+                                                            <small>Thanh toán khi nhận hàng</small>
+                                                        </span>
+                                                    </label>
+
+                                                    <label class="tt-pay__opt">
+                                                        <input type="radio" name="Pay" value="BANK">
+                                                        <span>
+                                                            <b>Chuyển khoản</b>
+                                                            <small>Chưa tích hợp cổng — bạn có thể xử lý thủ
+                                                                công</small>
+                                                        </span>
+                                                    </label>
+
+                                                    <label class="tt-pay__opt tt-pay__opt--disabled"
+                                                        title="Chưa tích hợp">
+                                                        <input type="radio" name="Pay" value="VNPAY" disabled>
+                                                        <span>
+                                                            <b>VNPAY</b>
+                                                            <small>Chưa tích hợp</small>
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="tt-actions">
+                                                    <button class="tt-btn tt-btn--primary" type="submit">
+                                                        Đặt hàng
+                                                    </button>
+                                                    <a class="tt-btn tt-btn--ghost" href="/giohang">Quay lại giỏ
+                                                        hàng</a>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <!-- RIGHT: summary -->
+                                        <aside class="tt-card tt-card--sum">
+                                            <h2 class="tt-h2">Đơn hàng của bạn</h2>
+
+                                            <div class="tt-items">
+                                                <% items.forEach(it=> {
+                                                    const img = (it.HinhAnh && String(it.HinhAnh).trim()) ? it.HinhAnh :
+                                                    "/images/placeholder-food.png";
+                                                    %>
+                                                    <div class="tt-item">
+                                                        <img class="tt-item__img" src="<%= img %>"
+                                                            alt="<%= it.TenMon %>">
+                                                        <div class="tt-item__info">
+                                                            <div class="tt-item__name">
+                                                                <%= it.TenMon %>
+                                                            </div>
+                                                            <div class="tt-item__meta">
+                                                                <span>
+                                                                    <%= money(it.DonGia) %>
+                                                                </span>
+                                                                <span>× <b>
+                                                                        <%= it.SoLuong %>
+                                                                    </b></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tt-item__line">
+                                                            <%= money(it.ThanhTien) %>
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
+                                            </div>
+
+                                            <div class="tt-sum">
+                                                <div class="tt-sum__row">
+                                                    <span>Tổng số lượng</span>
+                                                    <b>
+                                                        <%= c.TongSoLuong || 0 %>
+                                                    </b>
+                                                </div>
+                                                <div class="tt-sum__row tt-sum__row--big">
+                                                    <span>Tổng tiền</span>
+                                                    <b>
+                                                        <%= money(c.TongTien || 0) %>
+                                                    </b>
+                                                </div>
+                                            </div>
+                                        </aside>
+                                    </div>
+
+                                    <% } %>
+                </div>
+        </section>
+</body>
+
+</html>

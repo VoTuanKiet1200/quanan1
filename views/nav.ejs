@@ -1,0 +1,589 @@
+<!-- views/partials/nav.ejs (hoặc views/nav.ejs tuỳ bạn include) -->
+<link rel="stylesheet" href="/css/nav.css">
+
+<header class="site-header">
+    <div class="nav-wrap">
+
+        <!-- ===== TOP BAR ===== -->
+        <div class="nav-top">
+            <!-- LEFT: logo -->
+            <a class="brand-nav" href="/" aria-label="Trang chủ">
+                <img class="brand-logo-nav" src="/images/logo1.png" alt="QUÁN ĂN">
+            </a>
+
+            <!-- MID: search (trang chủ hỗ trợ ?q=...) -->
+            <form class="nav-search" action="/" method="GET" role="search">
+                <i class="bi bi-search"></i>
+                <input type="search" name="q" placeholder="Tìm món..." autocomplete="off" />
+            </form>
+
+            <!-- PROMO -->
+            <a class="nav-promo" href="/">
+                <span class="promo-ico"><i class="bi bi-percent"></i></span>
+                <span class="promo-txt">
+                    <small>Trong tháng này</small>
+                    <b>Giảm giá hấp dẫn</b>
+                </span>
+            </a>
+
+            <!-- RIGHT: icons + user + cart -->
+            <div class="nav-actions">
+
+                <!-- Nút sáng/tối -->
+
+
+                <% if (session && session.MaNguoiDung) { %>
+                    <a class="nav-icon nav-taikhoan" href="/taikhoan/dashboard" aria-label="Tài khoản"
+                        title="Tài khoản">
+                        <i class="bi bi-person-fill-gear"></i>
+                    </a>
+                    <% } else { %>
+                        <a class="nav-icon nav-dangnhap" href="/dangnhap" aria-label="Đăng nhập" title="Đăng nhập">
+                            <i class="bi bi-person"></i>
+                        </a>
+                        <% } %>
+
+                            <a class="nav-icon" href="/yeuthich" aria-label="Yêu thích" title="Yêu thích">
+                                <i class="bi bi-heart"></i>
+                            </a>
+
+                            <!-- cart -->
+                            <button class="cart-btn nav-icon" type="button" aria-label="Giỏ hàng" aria-haspopup="dialog"
+                                aria-controls="cart-overlay">
+                                <i class="bi bi-cart4"></i>
+                                <span class="cart-count">
+                                    <%= (typeof cartCount !=="undefined" ? cartCount : 0) %>
+                                </span>
+                            </button>
+
+                            <% if (session && session.MaNguoiDung) { %>
+                                <a class="nav-icon dangxuat-nav" href="/dangxuat" aria-label="Đăng xuất"
+                                    title="Đăng xuất">
+                                    <i class="bi bi-door-closed"></i>
+                                </a>
+                                <% } %>
+
+            </div>
+        </div>
+
+        <!-- ===== BOTTOM BAR ===== -->
+        <div class="nav-bottom">
+
+            <!-- Categories button -->
+            <div class="nav-dd" id="navCatDD">
+                <button class="nav-dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="nav-dd-text" id="navCatText">Danh sách</span>
+                    <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                </button>
+
+                <div class="nav-dd-menu" role="listbox">
+                    <% const dsDanhMuc=(typeof navDanhMucs !=="undefined" && navDanhMucs) ? navDanhMucs : []; %>
+
+                        <a class="nav-dd-item" href="/" data-slug="">Tất cả</a>
+
+                        <% dsDanhMuc.forEach(dm=> { %>
+                            <a class="nav-dd-item" href="/danhmuc/<%= dm.Slug %>" data-slug="<%= dm.Slug %>">
+                                <%= dm.TenDanhMuc %>
+                            </a>
+                            <% }) %>
+                </div>
+            </div>
+
+
+            <!-- MID: menu -->
+            <nav class="nav" id="site-menu" aria-label="Menu">
+                <% const a=(typeof active !=="undefined" ) ? active : "" ; %>
+
+                    <ul class="nav-list">
+                        <li><a class="nav-link <%= a==='home' ? 'active' : '' %>" href="/">Trang chủ</a></li>
+                        <li><a class="nav-link <%= a==='thucdon' ? 'active' : '' %>" href="/thucdon">Thực đơn</a></li>
+                        <li><a class="nav-link <%= a==='giohang' ? 'active' : '' %>" href="/giohang">Giỏ hàng</a></li>
+                        <li><a class="nav-link <%= a==='donhang' ? 'active' : '' %>" href="/donhang">Đơn hàng</a></li>
+
+
+                        <li><a class="nav-link <%= a==='gioithieu' ? 'active' : '' %>" href="/gioithieu">Giới
+                                thiệu</a></li>
+
+                        <% if (session && session.VaiTro==='admin' ) { %>
+                            <li><a class="nav-link <%= a==='dashboard' ? 'active' : '' %>"
+                                    href="/admin/dashboard">Admin</a></li>
+                            <% } %>
+                    </ul>
+            </nav>
+
+            <!-- RIGHT: (để trống) -->
+            <div class="nav-meta"></div>
+
+            <!-- hamburger (mobile) -->
+            <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false"
+                aria-controls="site-menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+    </div>
+</header>
+
+<!-- ===== Overlay giỏ hàng (render từ session, không gọi API) ===== -->
+<div class="cart-overlay" id="cart-overlay" aria-hidden="true">
+    <div class="cart-backdrop" data-cart-close></div>
+
+    <aside class="cart-panel" role="dialog" aria-modal="true" aria-label="Giỏ hàng">
+        <div class="cart-head">
+            <h3 class="cart-title">Giỏ hàng</h3>
+            <button class="cart-close" type="button" aria-label="Đóng" data-cart-close>
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="cart-body" id="cartBody">
+            <p class="cart-empty">Đang tải...</p>
+        </div>
+
+        <div class="cart-foot">
+
+
+            <div class="cart-total">
+                <span>Tạm tính</span>
+                <b id="cartTotal">0₫</b>
+            </div>
+
+            <!-- <button class="cart-buy-selected" id="cartBuySelected" type="button" disabled>
+                Mua đã chọn
+            </button> -->
+
+            <a class="cart-view" href="/giohang" style="display:block;text-align:center;text-decoration:none;">
+                Xem giỏ hàng
+            </a>
+        </div>
+    </aside>
+</div>
+
+<script>
+    // Mobile menu
+    (function () {
+        const btn = document.querySelector('.nav-toggle');
+        const menu = document.getElementById('site-menu');
+        if (!btn || !menu) return;
+
+        btn.addEventListener('click', () => {
+            const isOpen = menu.classList.toggle('is-open');
+            btn.classList.toggle('is-open', isOpen);
+            btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        menu.addEventListener('click', (e) => {
+            const a = e.target.closest('a');
+            if (!a) return;
+            if (window.matchMedia('(max-width: 980px)').matches) {
+                menu.classList.remove('is-open');
+                btn.classList.remove('is-open');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    })();
+</script>
+<script>
+    (function () {
+        const cartBtn = document.querySelector(".cart-btn");
+        const overlay = document.getElementById("cart-overlay");
+        const cartBody = document.getElementById("cartBody");
+        const cartTotal = document.getElementById("cartTotal");
+        const cartCountEl = document.querySelector(".cart-count");
+        const closeEls = overlay?.querySelectorAll("[data-cart-close]") || [];
+
+        if (!cartBtn || !overlay || !cartBody || !cartTotal) return;
+
+        const money = (n) => (Number(n || 0)).toLocaleString("vi-VN") + "₫";
+
+        function openCart() {
+            overlay.classList.add("is-open");
+            overlay.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeCart() {
+            overlay.classList.remove("is-open");
+            overlay.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+        }
+
+        closeEls.forEach((el) => el.addEventListener("click", closeCart));
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && overlay.classList.contains("is-open")) closeCart();
+        });
+
+        function shakeCart() {
+            cartBtn.classList.remove("is-shake");
+            void cartBtn.offsetWidth;
+            cartBtn.classList.add("is-shake");
+            cartBtn.addEventListener("animationend", () => cartBtn.classList.remove("is-shake"), { once: true });
+        }
+
+        function findProductImg(triggerEl) {
+            if (!triggerEl) return null;
+
+            // Ưu tiên ảnh trong card gần nút bấm
+            const card = triggerEl.closest('.s2-card, .p-card, .product-card, .sanpham-card, .phone-card, .card, article, li, .item');
+            const img1 = card?.querySelector('img');
+            if (img1 && (img1.currentSrc || img1.src)) return img1;
+
+            // Trang chi tiết
+            const detailWrap = triggerEl.closest('.pd-wrap, .pd-right, .pd-page, .pd-actions');
+            const img2 = detailWrap?.querySelector('#pdMainImg, .pd-img img');
+            if (img2 && (img2.currentSrc || img2.src)) return img2;
+
+            // Fallback cuối
+            const main = document.getElementById('pdMainImg');
+            return (main && (main.currentSrc || main.src)) ? main : null;
+        }
+
+        function flyToCart(imgEl) {
+            if (!imgEl || !imgEl.src) { shakeCart(); return Promise.resolve(); }
+
+            const imgRect = imgEl.getBoundingClientRect();
+
+            // ✅ target đúng icon (không bị lệch vì badge)
+            const targetEl = cartBtn.querySelector("i.bi-cart4") || cartBtn;
+            const cartRect = targetEl.getBoundingClientRect();
+
+            const clone = document.createElement("img");
+            clone.src = imgEl.currentSrc || imgEl.src;
+            clone.className = "fly-img";
+
+            // ✅ cực quan trọng để không lệch do border
+            clone.style.boxSizing = "border-box";
+
+            // ✅ dùng fixed + left/top theo viewport => không lệch
+            clone.style.position = "fixed";
+            clone.style.left = imgRect.left + "px";
+            clone.style.top = imgRect.top + "px";
+            clone.style.width = imgRect.width + "px";
+            clone.style.height = imgRect.height + "px";
+
+            // style bạn đang dùng
+            clone.style.borderRadius = "25px";
+            clone.style.objectFit = "cover";
+            clone.style.border = "4px solid rgba(212, 255, 58, .95)";
+            clone.style.zIndex = "999999";
+            clone.style.pointerEvents = "none";
+
+            document.body.appendChild(clone);
+
+            const endW = Math.max(18, imgRect.width * 0.12);
+            const endH = Math.max(18, imgRect.height * 0.12);
+
+            // ✅ điểm đến: giữa icon
+            const endLeft = cartRect.left + cartRect.width / 2 - endW / 2;
+            const endTop = cartRect.top + cartRect.height / 2 - endH / 2;
+
+            const anim = clone.animate(
+                [
+                    { left: imgRect.left + "px", top: imgRect.top + "px", width: imgRect.width + "px", height: imgRect.height + "px", opacity: 1 },
+                    { left: endLeft + "px", top: endTop + "px", width: endW + "px", height: endH + "px", opacity: 0.15 }
+                ],
+                { duration: 900, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" }
+            );
+
+            return anim.finished
+                .catch(() => { })
+                .then(() => { clone.remove(); shakeCart(); });
+        }
+
+        function render(cart) {
+            const items = cart?.items || [];
+            cartTotal.textContent = money(cart?.TongTien || 0);
+            if (cartCountEl) cartCountEl.textContent = String(cart?.TongSoLuong || 0);
+
+            if (!items.length) {
+                cartBody.innerHTML = `<p class="cart-empty">Giỏ hàng trống.</p>`;
+                return;
+            }
+
+            cartBody.innerHTML = items.map((it) => {
+                const img = (it.HinhAnh && it.HinhAnh.trim()) ? it.HinhAnh : "/images/placeholder-food.png";
+                const safeName = (it.TenMon || "").replaceAll('"', "&quot;");
+
+                return `
+    <div class="cart-item" data-id="${it.id}">
+      <img class="cart-item__img" src="${img}" alt="${safeName}">
+
+      <div class="cart-item__info">
+        <div class="cart-item__top" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+          <div class="cart-item__name">${it.TenMon || ""}</div>
+
+          <button class="cart-item__remove" type="button" data-remove="${it.id}" aria-label="Xoá" title="Xoá">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+       <div class="cart-item__bottom" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+  <div class="cart-qty" data-qty-wrap>
+    <button class="cart-qty__btn" type="button" data-qty="-1" aria-label="Giảm">−</button>
+    <input class="cart-qty__input" type="number" min="1" value="${it.SoLuong}" data-qty-input>
+    <button class="cart-qty__btn" type="button" data-qty="1" aria-label="Tăng">+</button>
+  </div>
+
+  <div class="cart-item__price">
+    ${money(it.DonGia)} × <b>${it.SoLuong}</b>
+  </div>
+</div>
+        </div>
+
+      <div class="cart-item__sub">${money(it.ThanhTien)}</div>
+    </div>
+  `;
+            }).join("");
+
+        }
+
+        async function fetchJson(url, options) {
+            const res = await fetch(url, options);
+            const ct = (res.headers.get("content-type") || "").toLowerCase();
+            if (!ct.includes("application/json")) return { __notJson: true, status: res.status };
+            const data = await res.json().catch(() => null);
+            return data || { ok: false, message: "JSON không hợp lệ" };
+        }
+
+        async function loadMiniCart() {
+            cartBody.innerHTML = `<p class="cart-empty">Đang tải...</p>`;
+
+            const data = await fetchJson("/giohang/mini?json=1", {
+                credentials: "same-origin",
+                headers: { "Accept": "application/json", "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            if (data.__notJson || data.ok === false) {
+                const link = data?.redirect || "/dangnhap";
+                cartBody.innerHTML = `<p class="cart-empty">Bạn cần đăng nhập. <a href="${link}">Đăng nhập</a></p>`;
+                return;
+            }
+
+            render(data.cart);
+        }
+
+        // chỉ mở overlay khi bấm icon giỏ
+        cartBtn.addEventListener("click", () => {
+            openCart();
+            loadMiniCart();
+        });
+
+        // Form addcart (thực đơn) - ưu tiên data-imgid, KHÔNG mở overlay
+        document.addEventListener("submit", async (e) => {
+            const form = e.target.closest("form[data-addcart]");
+            if (!form) return;
+            e.preventDefault();
+
+            const data = await fetchJson(form.action + "?json=1", {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: new URLSearchParams(new FormData(form)),
+            });
+
+            if (data.__notJson || data.ok === false) {
+                if (data?.redirect) return (location.href = data.redirect);
+                alert(data?.message || "Không thêm được vào giỏ.");
+                return;
+            }
+
+            const imgById = form.dataset.imgid ? document.getElementById(form.dataset.imgid) : null;
+            flyToCart(imgById || findProductImg(form));
+            render(data.cart);
+            closeCart();
+        });
+        cartBody.addEventListener("click", async (e) => {
+            const btn = e.target.closest("[data-remove]");
+            if (!btn) return;
+
+            const id = btn.dataset.remove || btn.closest(".cart-item")?.dataset?.id;
+            if (!id) return;
+
+            btn.disabled = true;
+
+            const data = await fetchJson(`/giohang/xoa/${id}?json=1`, {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            });
+
+            btn.disabled = false;
+
+            if (data.__notJson || data.ok === false) {
+                if (data?.redirect) return (location.href = data.redirect);
+                alert(data?.message || "Không xoá được.");
+                return;
+            }
+
+            // cập nhật lại overlay + badge/tổng tiền
+            render(data.cart);
+        });
+        async function updateQty(id, qty) {
+            return await fetchJson(`/giohang/capnhat/${id}?json=1`, {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: new URLSearchParams({ qty: String(qty) })
+            });
+        }
+
+        // debounce để bấm + - liên tục không spam API
+        let qtyTimer = null;
+
+        cartBody.addEventListener("click", (e) => {
+            const btn = e.target.closest("[data-qty]");
+            if (!btn) return;
+
+            const itemEl = btn.closest(".cart-item");
+            const id = itemEl?.dataset?.id;
+            if (!id) return;
+
+            const input = itemEl.querySelector("[data-qty-input]");
+            let cur = parseInt(input?.value || "1", 10);
+            if (isNaN(cur) || cur < 1) cur = 1;
+
+            const delta = parseInt(btn.dataset.qty || "0", 10);
+            let next = cur + delta;
+            if (next < 1) next = 1;
+
+            if (input) input.value = next;
+
+            clearTimeout(qtyTimer);
+            qtyTimer = setTimeout(async () => {
+                const data = await updateQty(id, next);
+
+                if (data.__notJson || data.ok === false) {
+                    if (data?.redirect) return (location.href = data.redirect);
+                    alert(data?.message || "Không cập nhật được số lượng.");
+                    return;
+                }
+                render(data.cart);
+            }, 150);
+        });
+
+        cartBody.addEventListener("change", async (e) => {
+            const input = e.target.closest("[data-qty-input]");
+            if (!input) return;
+
+            const itemEl = input.closest(".cart-item");
+            const id = itemEl?.dataset?.id;
+            if (!id) return;
+
+            let next = parseInt(input.value || "1", 10);
+            if (isNaN(next) || next < 1) next = 1;
+            input.value = next;
+
+            const data = await updateQty(id, next);
+
+            if (data.__notJson || data.ok === false) {
+                if (data?.redirect) return (location.href = data.redirect);
+                alert(data?.message || "Không cập nhật được số lượng.");
+                return;
+            }
+            render(data.cart);
+        });
+
+        // Nút onclick __addToCart (trang chủ) - dùng imgEl truyền vào, KHÔNG mở overlay
+        window.__addToCart = async function (id, qty = 1, btn, imgEl) {
+            if (btn) {
+                btn.disabled = true;
+                btn.dataset.oldText = btn.textContent;
+                btn.textContent = "Đang thêm...";
+            }
+
+            try {
+                const data = await fetchJson(`/giohang/them/${id}?json=1`, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                        "Accept": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: new URLSearchParams({ qty: String(qty) })
+                });
+
+                if (data.__notJson || data.ok === false) {
+                    if (data?.redirect) return (location.href = data.redirect);
+                    alert(data?.message || "Không thêm được vào giỏ.");
+                    return;
+                }
+
+                flyToCart(imgEl || findProductImg(btn));
+                render(data.cart);
+                closeCart();
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = btn.dataset.oldText || "Thêm vào giỏ";
+                }
+            }
+        };
+    })();
+</script>
+
+
+
+
+
+<script>
+    (function () {
+        const dd = document.getElementById("navCatDD");
+        if (!dd) return;
+
+        const btn = dd.querySelector(".nav-dd-btn");
+        const txt = dd.querySelector(".nav-dd-text");
+        const menu = dd.querySelector(".nav-dd-menu");
+        const items = dd.querySelectorAll(".nav-dd-item");
+
+        function close() {
+            dd.classList.remove("open");
+            btn.setAttribute("aria-expanded", "false");
+        }
+        function toggle() {
+            const isOpen = dd.classList.toggle("open");
+            btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        }
+
+        // đọc dm từ query
+        const params = new URLSearchParams(location.search);
+        const currentDm = params.get("dm") || "";
+
+        // active + đổi text
+        let foundText = "";
+        items.forEach(a => {
+            const slug = a.getAttribute("data-slug") || "";
+            const active = slug === currentDm;
+            a.classList.toggle("is-active", active);
+            if (active) foundText = a.textContent.trim();
+        });
+        if (txt) txt.textContent = foundText || "Danh sách";
+
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggle();
+        });
+
+        document.addEventListener("click", close);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") close();
+        });
+
+        menu.addEventListener("click", (e) => {
+            const a = e.target.closest(".nav-dd-item");
+            if (!a) return;
+            close();
+        });
+    })();
+</script>

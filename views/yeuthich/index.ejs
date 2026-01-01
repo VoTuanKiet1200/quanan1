@@ -1,0 +1,204 @@
+<link rel="stylesheet" href="/css/yeuthich.css">
+
+<% const query=(typeof q !=="undefined" && q) ? q : {}; const qText=String(query.q || "" ); const st=String(query.st
+    || "" ); const sort=String(query.sort || "new" ); const money=(n)=> (Number(n || 0)).toLocaleString("vi-VN") + "₫";
+    const priceNow = (sp) => {
+    const g = Number(sp?.Gia || 0);
+    const km = Number(sp?.GiaKhuyenMai || 0);
+    if (km > 0 && km < g) return km; return g; }; const hasSale=(sp)=> {
+        const g = Number(sp?.Gia || 0);
+        const km = Number(sp?.GiaKhuyenMai || 0);
+        return km > 0 && km < g; }; const percentOff=(sp)=> {
+            const g = Number(sp?.Gia || 0);
+            const km = Number(sp?.GiaKhuyenMai || 0);
+            if (!(km > 0 && km < g) || g <=0) return 0; return Math.round(((g - km) / g) * 100); }; %>
+
+                <div class="yt-page">
+                    <header class="yt-head">
+                        <div class="yt-head-left">
+                            <h1 class="yt-title">Yêu thích</h1>
+                            <p class="yt-sub">
+                                <span>Danh sách sản phẩm bạn đã lưu.</span>
+                                <span class="yt-count"><b>
+                                        <%= (items || []).length %>
+                                    </b> sản phẩm</span>
+                            </p>
+                        </div>
+
+                        <a class="yt-back" href="/sanpham">
+                            <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
+                        </a>
+                    </header>
+
+                    <!-- FILTER BAR -->
+                    <form class="yt-filter" method="GET" action="/yeuthich">
+                        <div class="yt-filter-row">
+                            <div class="yt-field yt-field--grow">
+                                <label class="yt-label" for="q">Tìm sản phẩm</label>
+                                <div class="yt-input-wrap">
+                                    <i class="bi bi-search" aria-hidden="true"></i>
+                                    <input id="q" class="yt-input" type="text" name="q" value="<%= qText %>"
+                                        placeholder="Nhập tên sản phẩm..." autocomplete="off" />
+                                </div>
+                            </div>
+
+                            <div class="yt-field">
+                                <label class="yt-label" for="st">Tình trạng</label>
+                                <select id="st" class="yt-select" name="st">
+                                    <option value="" <%=!st ? "selected" : "" %>>Tất cả</option>
+                                    <option value="in" <%=st==="in" ? "selected" : "" %>>Còn hàng</option>
+                                    <option value="out" <%=st==="out" ? "selected" : "" %>>Hết hàng</option>
+                                    <option value="sale" <%=st==="sale" ? "selected" : "" %>>Đang giảm</option>
+                                </select>
+                            </div>
+
+                            <div class="yt-field">
+                                <label class="yt-label" for="sort">Sắp xếp</label>
+                                <select id="sort" class="yt-select" name="sort">
+                                    <option value="new" <%=sort==="new" ? "selected" : "" %>>Theo thứ tự đã lưu</option>
+                                    <option value="old" <%=sort==="old" ? "selected" : "" %>>Đảo ngược</option>
+                                    <option value="price_asc" <%=sort==="price_asc" ? "selected" : "" %>>Giá tăng dần
+                                    </option>
+                                    <option value="price_desc" <%=sort==="price_desc" ? "selected" : "" %>>Giá giảm dần
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="yt-field yt-field--actions">
+                                <label class="yt-label yt-label--ghost">.</label>
+                                <div class="yt-actions">
+                                    <button class="yt-btn yt-btn--primary" type="submit">
+                                        <i class="bi bi-funnel" aria-hidden="true"></i> Lọc
+                                    </button>
+                                    <a class="yt-btn" href="/yeuthich">
+                                        <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reset
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <% if (!items || items.length===0) { %>
+                        <section class="yt-empty">
+                            <div class="yt-empty-box">
+                                <div class="yt-empty-ico"><i class="bi bi-heart" aria-hidden="true"></i></div>
+                                <h3>Chưa có sản phẩm yêu thích</h3>
+                                <p>Hãy bấm “❤” ở sản phẩm để lưu lại tại đây.</p>
+                                <a class="yt-btn yt-btn--primary" href="/sanpham">Xem sản phẩm</a>
+                            </div>
+                        </section>
+                        <% } else { %>
+                            <section class="yt-grid" id="ytGrid">
+                                <% items.forEach(sp=> {
+                                    const img = sp?.HinhAnhChinh || (sp?.HinhAnh && sp.HinhAnh[0]) ||
+                                    "/images/no-image.png";
+                                    const link = "/sanpham/" + (sp?.Slug || sp?._id);
+                                    const inStock = Number(sp?.SoLuong || 0) > 0;
+                                    %>
+
+                                    <article class="yt-card" data-id="<%= sp._id %>">
+                                        <a class="yt-img" href="<%= link %>"
+                                            aria-label="<%= sp?.TenSanPham || 'Sản phẩm' %>">
+                                            <img src="<%= img %>" alt="<%= sp?.TenSanPham || 'Sản phẩm' %>">
+                                            <% if (hasSale(sp)) { %>
+                                                <span class="yt-badge yt-badge--sale">-<%= percentOff(sp) %>%</span>
+                                                <% } %>
+                                                    <span class="yt-badge yt-badge--stock <%= inStock ? " is-in"
+                                                        : "is-out" %>">
+                                                        <%= inStock ? "Còn hàng" : "Hết hàng" %>
+                                                    </span>
+                                        </a>
+
+                                        <div class="yt-body">
+                                            <div class="yt-meta">
+                                                <span class="yt-chip">
+                                                    <i class="bi bi-tags" aria-hidden="true"></i>
+                                                    <%= sp?.DanhMuc?.TenDanhMuc || "Danh mục" %>
+                                                </span>
+                                                <span class="yt-chip">
+                                                    <i class="bi bi-buildings" aria-hidden="true"></i>
+                                                    <%= sp?.ThuongHieu?.TenThuongHieu || "Thương hiệu" %>
+                                                </span>
+                                            </div>
+
+                                            <h3 class="yt-name">
+                                                <a href="<%= link %>">
+                                                    <%= sp?.TenSanPham || "Sản phẩm" %>
+                                                </a>
+                                            </h3>
+
+                                            <div class="yt-price">
+                                                <div class="yt-price-now">
+                                                    <%= money(priceNow(sp)) %>
+                                                </div>
+                                                <% if (hasSale(sp)) { %>
+                                                    <div class="yt-price-old">
+                                                        <%= money(sp?.Gia) %>
+                                                    </div>
+                                                    <% } %>
+                                            </div>
+
+                                            <div class="yt-foot">
+                                                <a class="yt-btn yt-btn--sm" href="<%= link %>">
+                                                    <i class="bi bi-eye" aria-hidden="true"></i> Xem
+                                                </a>
+
+                                                <button class="yt-btn yt-btn--sm yt-btn--danger js-toggle-fav"
+                                                    type="button" data-id="<%= sp._id %>" title="Bỏ khỏi yêu thích">
+                                                    <i class="bi bi-heartbreak" aria-hidden="true"></i> Bỏ
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </article>
+
+                                    <% }) %>
+                            </section>
+                            <% } %>
+                </div>
+
+                <script>
+                    (function () {
+                        const grid = document.getElementById("ytGrid");
+                        if (!grid) return;
+
+                        async function toggleFav(id) {
+                            const res = await fetch("/yeuthich/toggle/" + encodeURIComponent(id), {
+                                method: "POST",
+                                headers: { "Accept": "application/json" }
+                            });
+
+                            let data = null;
+                            try { data = await res.json(); } catch (_) { }
+
+                            if (!res.ok || !data || !data.ok) {
+                                if (data && data.code === "LOGIN_REQUIRED") location.href = "/dangnhap";
+                                alert((data && data.message) ? data.message : "Không thể cập nhật yêu thích.");
+                                return;
+                            }
+
+                            // Nếu disliked => remove card
+                            if (data.liked === false) {
+                                const card = grid.querySelector('.yt-card[data-id="' + CSS.escape(String(id)) + '"]');
+                                if (card) card.remove();
+
+                                // update count text (nếu còn)
+                                const countEl = document.querySelector(".yt-count b");
+                                if (countEl) {
+                                    const n = Math.max(0, Number(countEl.textContent || 0) - 1);
+                                    countEl.textContent = String(n);
+                                }
+
+                                // Nếu xoá hết => reload để hiện empty state
+                                if (!grid.querySelector(".yt-card")) location.href = "/yeuthich";
+                            }
+                        }
+
+                        grid.addEventListener("click", (e) => {
+                            const btn = e.target.closest(".js-toggle-fav");
+                            if (!btn) return;
+                            const id = btn.getAttribute("data-id");
+                            if (!id) return;
+                            toggleFav(id);
+                        });
+                    })();
+                </script>

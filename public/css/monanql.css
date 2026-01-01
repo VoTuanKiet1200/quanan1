@@ -1,0 +1,242 @@
+/* public/css/monanql.css (copy style giống sanphamql nhưng đổi class) */
+
+.page-monan {
+    width: 100%;
+}
+
+.toolbar-monan {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.toolbar-left-monan {
+    margin-right: auto;
+}
+
+.title-monan {
+    margin: 0;
+    font-size: 22px;
+}
+
+.subtitle-monan {
+    opacity: .75;
+    margin-top: 2px;
+}
+
+.search-monan {
+    min-width: 280px;
+    flex: 0 1 360px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    color: inherit;
+    padding: 0 12px;
+    outline: none;
+}
+
+.btn-monan {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    color: inherit;
+    cursor: pointer;
+}
+
+.btn-monan--primary {
+    background: rgba(212, 255, 58, .95);
+    border-color: rgba(212, 255, 58, .95);
+    color: #111;
+    font-weight: 600;
+}
+
+.btn-monan--sm {
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 10px;
+}
+
+.btn-monan-sua {
+    background: rgba(255, 255, 255, .08);
+}
+
+.btn-monan-danger {
+    background: rgba(255, 70, 70, .16);
+    border-color: rgba(255, 70, 70, .22);
+}
+
+.btn-monan-xuat-excel,
+.btn-monan-nhap-excel,
+.btn-monan-mau {
+    background: rgba(255, 255, 255, .06);
+}
+
+.excel-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.excel-file {
+    height: 40px;
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    color: inherit;
+}
+
+.table-wrap-monan {
+    overflow: auto;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    background: rgba(255, 255, 255, .03);
+}
+
+.table-monan {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 920px;
+}
+
+.table-monan th,
+.table-monan td {
+    padding: 12px 12px;
+    border-bottom: 1px solid rgba(54, 54, 54, 0.08);
+    vertical-align: middle;
+
+}
+
+.table-monan thead th {
+    text-align: left;
+    font-size: 13px;
+    letter-spacing: .02em;
+    opacity: .85;
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+    z-index: 1;
+}
+
+.table-monan tbody tr:nth-child(odd) {
+    background: rgba(255, 255, 255, .02);
+}
+
+.table-monan tbody tr:nth-child(even) {
+    background: rgba(235, 235, 235, 0.486);
+}
+
+/* hover để dễ nhìn */
+.table-monan tbody tr:hover {
+    background: rgba(100, 100, 100, 0.1);
+}
+
+
+
+
+.img-monan {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    display: block;
+}
+
+.name-monan__main {
+    font-weight: 700;
+}
+
+.name-monan__sub {
+    opacity: .7;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.price-monan__value {
+    font-weight: 700;
+}
+
+.price-monan__old {
+    display: block;
+    opacity: .65;
+    text-decoration: line-through;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.chip-monan {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.chip-monan--sl.is-zero {
+    background: rgba(255, 70, 70, .18);
+    border-color: rgba(255, 70, 70, .26);
+}
+
+.chip-monan--sl.is-low {
+    background: rgba(255, 190, 70, .16);
+    border-color: rgba(255, 190, 70, .24);
+}
+
+.chip-monan--sl.is-ok {
+    background: rgba(70, 255, 160, .12);
+    border-color: rgba(70, 255, 160, .18);
+}
+
+.badge-monan {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .04em;
+    border: 1px solid rgba(255, 255, 255, .12);
+}
+
+.badge-monan--on {
+    background: rgba(70, 255, 160, .14);
+    border-color: rgba(70, 255, 160, .22);
+}
+
+.badge-monan--off {
+    background: rgba(255, 70, 70, .14);
+    border-color: rgba(255, 70, 70, .22);
+}
+
+.hanhdong-monan {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.form-monan-inline {
+    display: inline;
+}
+
+@media (max-width: 740px) {
+    .search-monan {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+}

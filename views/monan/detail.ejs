@@ -1,0 +1,155 @@
+<link rel="stylesheet" href="/css/monan-detail.css" />
+<link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css" />
+
+<% const money=(n)=> (Number(n || 0)).toLocaleString("vi-VN") + "₫";
+
+    const g = Number(item?.Gia || 0);
+    const gkm = Number(item?.GiaKhuyenMai || 0);
+    const hasSale = gkm > 0 && gkm < g; const priceNow=hasSale ? gkm : g; const stock=Number(item?.SoLuongTon || 0);
+        const out=stock <=0; const img=(item?.HinhAnh && String(item.HinhAnh).trim()) ? item.HinhAnh
+        : "/images/placeholder-food.png" ; const catName=item?.DanhMucId?.TenDanhMuc || "" ; const
+        catSlug=item?.DanhMucId?.Slug || "" ; %>
+
+        <section class="fd">
+            <%- include('../nav') %>
+
+                <div class="fd-wrap">
+                    <div class="fd-head">
+                        <a class="fd-back" href="/thucdon">
+                            <i class="bi bi-arrow-left"></i> Quay lại thực đơn
+                        </a>
+
+                        <div class="fd-breadcrumb">
+                            <a href="/thucdon">Thực đơn</a>
+                            <% if (catName) { %>
+                                <span>/</span>
+                                <a href="/thucdon?dm=<%= encodeURIComponent(catSlug) %>">
+                                    <%= catName %>
+                                </a>
+                                <% } %>
+                                    <span>/</span>
+                                    <span class="fd-current">
+                                        <%= item?.TenMon || "" %>
+                                    </span>
+                        </div>
+                    </div>
+
+                    <div class="fd-grid">
+                        <!-- Ảnh -->
+                        <div class="fd-media">
+                            <div class="fd-img">
+                                <img id="img-<%= item._id %>" src="<%= img %>" alt="<%= item?.TenMon || 'Món ăn' %>">
+                                <% if (hasSale) { %><span class="fd-badge">Sale</span>
+                                    <% } %>
+                                        <% if (out) { %><span class="fd-badge fd-badge--out">Hết món</span>
+                                            <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Nội dung -->
+                        <div class="fd-content">
+                            <div class="fd-kicker">
+                                <% if (catName) { %>
+                                    <i class="bi bi-tags"></i> <span>
+                                        <%= catName %>
+                                    </span>
+                                    <% } %>
+                            </div>
+
+                            <h1 class="fd-title">
+                                <%= item?.TenMon || "" %>
+                            </h1>
+
+                            <% if (item?.MoTaNgan) { %>
+                                <p class="fd-sub">
+                                    <%= item.MoTaNgan %>
+                                </p>
+                                <% } %>
+
+                                    <div class="fd-price">
+                                        <span class="fd-now">
+                                            <%= money(priceNow) %>
+                                        </span>
+                                        <% if (hasSale) { %>
+                                            <span class="fd-old">
+                                                <%= money(g) %>
+                                            </span>
+                                            <% } %>
+                                    </div>
+
+                                    <div class="fd-meta">
+                                        <div class="fd-metaItem">
+                                            <div class="k">Tình trạng</div>
+                                            <div class="v <%= out ? 'is-out' : 'is-in' %>">
+                                                <%= out ? "Hết món" : "Còn hàng" %>
+                                            </div>
+                                        </div>
+
+
+
+                                        <% if (item?.BanChay !==undefined) { %>
+                                            <div class="fd-metaItem">
+                                                <div class="k">Bán chạy</div>
+                                                <div class="v">
+                                                    <%= Number(item.BanChay || 0) %>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                    </div>
+
+                                    <div class="fd-actions">
+                                        <form class="fd-form" method="POST" action="/giohang/them/<%= item._id %>">
+                                            <div class="qty">
+                                                <button class="qty-btn" type="button" data-step="-1"
+                                                    aria-label="Giảm">−</button>
+                                                <input id="qty" name="qty" class="qty-input" type="number" min="1"
+                                                    max="<%= Math.max(1, stock || 99) %>" value="1" <%=out ? "disabled"
+                                                    : "" %>
+                                                />
+                                                <button class="qty-btn" type="button" data-step="1"
+                                                    aria-label="Tăng">+</button>
+                                            </div>
+
+
+                                            <button class="btn-primary" type="button"
+                                                onclick="__addToCart('<%= item._id %>', 1, this, document.getElementById('img-<%= item._id %>'))"
+                                                <%=out ? 'disabled aria-disabled="true"' : '' %>
+                                                >
+                                                <%= out ? 'Hết hàng' : 'Thêm vào giỏ' %>
+                                            </button>
+                                        </form>
+
+                                        <a class="btn-ghost" href="/thucdon">Xem món khác</a>
+                                    </div>
+
+                                    <% if (item?.MoTa) { %>
+                                        <div class="fd-desc">
+                                            <h3>Mô tả</h3>
+                                            <div class="fd-descText">
+                                                <%= item.MoTa %>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <script>
+            (function () {
+                const input = document.getElementById("qty");
+                if (!input) return;
+
+                const min = () => Number(input.min || 1);
+                const max = () => Number(input.max || 999);
+
+                document.querySelectorAll(".qty-btn").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        if (input.disabled) return;
+                        const step = Number(btn.getAttribute("data-step") || 1);
+                        const next = Math.max(min(), Math.min(max(), Number(input.value || 1) + step));
+                        input.value = next;
+                    });
+                });
+            })();
+        </script>

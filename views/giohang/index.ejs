@@ -1,0 +1,133 @@
+<!-- views/giohang/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/giohang.css">
+</head>
+
+<body>
+
+
+    <% const money=(n)=> Number(n||0).toLocaleString('vi-VN') + "₫";
+        const c = cart || { items: [], TongSoLuong: 0, TongTien: 0 };
+        const items = c.items || [];
+        %>
+
+        <section class="gh">
+            <%- include('../nav', { active: 'giohang' }) %>
+
+                <div class="gh-wrap">
+                    <div class="gh-head">
+                        <h1 class="gh-title">Giỏ hàng</h1>
+                        <div class="gh-sub">
+                            <b>
+                                <%= c.TongSoLuong || 0 %>
+                            </b> món
+                        </div>
+                    </div>
+
+                    <% if (!items.length) { %>
+                        <div class="gh-empty">
+                            <i class="bi bi-bag-x"></i>
+                            <div>
+                                <div class="gh-empty__title">Giỏ hàng trống</div>
+                                <div class="gh-empty__sub">Hãy quay lại thực đơn để chọn món bạn thích.</div>
+                                <a class="gh-btn" href="/thucdon">Xem thực đơn</a>
+                            </div>
+                        </div>
+                        <% } else { %>
+
+                            <div class="gh-grid">
+                                <!-- LEFT -->
+                                <div class="gh-list">
+                                    <% items.forEach(it=> {
+                                        const img = (it.HinhAnh && it.HinhAnh.trim()) ? it.HinhAnh :
+                                        "/images/placeholder-food.png";
+                                        %>
+
+                                        <article class="gh-item">
+                                            <div class="gh-item__img">
+                                                <img src="<%= img %>" alt="<%= it.TenMon %>">
+                                            </div>
+
+                                            <div class="gh-item__main">
+                                                <div class="gh-item__top">
+                                                    <div class="gh-item__name">
+                                                        <%= it.TenMon %>
+                                                    </div>
+
+                                                    <!-- XÓA -->
+                                                    <form method="POST" action="/giohang/xoa/<%= it.id %>"
+                                                        class="gh-item__removeForm">
+                                                        <button class="gh-item__remove" type="submit" title="Xoá"
+                                                            aria-label="Xoá">
+                                                            <i class="bi bi-x-lg"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+
+                                                <div class="gh-item__meta">
+                                                    <div class="gh-item__unit">Đơn giá: <b>
+                                                            <%= money(it.DonGia) %>
+                                                        </b></div>
+                                                </div>
+
+                                                <div class="gh-item__bottom">
+                                                    <!-- CẬP NHẬT SỐ LƯỢNG -->
+                                                    <form method="POST" action="/giohang/capnhat/<%= it.id %>"
+                                                        class="gh-qtyForm">
+                                                        <label class="gh-qtyLabel">SL</label>
+                                                        <input class="gh-qtyInput" type="number" name="qty" min="1"
+                                                            value="<%= it.SoLuong %>" required>
+                                                        <button class="gh-qtySubmit" type="submit">Cập nhật</button>
+                                                    </form>
+
+                                                    <div class="gh-item__line">
+                                                        <span>Tạm tính</span>
+                                                        <b>
+                                                            <%= money(it.ThanhTien) %>
+                                                        </b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </article>
+
+                                        <% }) %>
+                                </div>
+
+                                <!-- RIGHT -->
+                                <aside class="gh-sum">
+                                    <div class="gh-sum__box">
+                                        <div class="gh-sum__row">
+                                            <span>Tổng số lượng</span>
+                                            <b>
+                                                <%= c.TongSoLuong || 0 %>
+                                            </b>
+                                        </div>
+
+                                        <div class="gh-sum__row gh-sum__row--big">
+                                            <span>Tổng tiền</span>
+                                            <b>
+                                                <%= money(c.TongTien || 0) %>
+                                            </b>
+                                        </div>
+
+                                        <a class="gh-btn gh-btn--primary" href="/thanhtoan">Thanh toán</a>
+                                        <a class="gh-btn gh-btn--ghost" href="/thucdon">Mua thêm</a>
+                                    </div>
+                                </aside>
+                            </div>
+
+                            <% } %>
+                </div>
+        </section>
+</body>
+
+</html>

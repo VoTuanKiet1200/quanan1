@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt hàng thành công</title>
+    <link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/thanhtoan.css">
+</head>
+
+<body>
+    <% const money=(n)=> Number(n||0).toLocaleString('vi-VN') + "₫";
+
+        const items =
+        (Array.isArray(order?.Items) && order.Items) ||
+        (Array.isArray(order?.items) && order.items) ||
+        (Array.isArray(order?.DanhSachMon) && order.DanhSachMon) ||
+        (Array.isArray(order?.danhSachMon) && order.danhSachMon) ||
+        [];
+
+        const totalQty = items.reduce((s, it) => {
+        const sl = Number(it?.SoLuong ?? it?.soLuong ?? it?.qty ?? 1);
+        return s + (Number.isFinite(sl) ? sl : 1);
+        }, 0);
+
+        const pay = String(order?.PhuongThucThanhToan || "COD").toUpperCase();
+
+        // ✅ THÔNG TIN CK: lấy từ biến render "bankInfo" (route) là chính,
+        // fallback nếu bạn còn dữ liệu cũ trong order.ThongTinChuyenKhoan
+        const bank = (typeof bankInfo !== "undefined" && bankInfo) ? bankInfo : (order?.ThongTinChuyenKhoan || {});
+
+        // ✅ NỘI DUNG CK: ưu tiên field trong order (đã lưu đúng schema)
+        const noiDung = String(order?.NoiDungChuyenKhoan || bank?.addInfo || "").trim();
+
+        // ✅ QR: ưu tiên biến render "qrSrc" (route tạo), fallback dữ liệu cũ (nếu có)
+        const qr = String(
+        (typeof qrSrc !== "undefined" && qrSrc) ? qrSrc : (bank?.qrDataURL || bank?.qrImageUrl || "")
+        ).trim();
+
+        const amount = Number(order?.TongTien || bank?.amount || 0);
+        %>
+
+        <section class="tt">
+            <%- include('../nav', { active: 'giohang' }) %>
+
+                <div class="tt-wrap">
+                    <div class="tt-card">
+                        <h1 class="tt-title" style="margin-bottom:8px;">Đặt hàng thành công</h1>
+
+                        <div class="tt-sub" style="margin-bottom:14px;">
+                            Mã đơn: <b>
+                                <%= String(order?._id || "" ) %>
+                            </b>
+                        </div>
+
+                        <div class="tt-sum">
+                            <div class="tt-sum__row">
+                                <span>Tổng số lượng</span>
+                                <b>
+                                    <%= totalQty %>
+                                </b>
+                            </div>
+
+                            <div class="tt-sum__row tt-sum__row--big">
+                                <span>Tổng tiền</span>
+                                <b>
+                                    <%= money(order?.TongTien || 0) %>
+                                </b>
+                            </div>
+                        </div>
+
+                        <% if (pay==="BANK" ) { %>
+                            <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);">
+                                <h3 style="margin:0 0 10px 0;font-size:16px;">Chuyển khoản ngân hàng</h3>
+
+                                <div style="display:grid;gap:6px;">
+                                    <div>
+                                        <span style="opacity:.8;">Ngân hàng (BIN):</span>
+                                        <b>
+                                            <%= bank?.acqId || "-" %>
+                                        </b>
+                                    </div>
+                                    <div>
+                                        <span style="opacity:.8;">Số tài khoản:</span>
+                                        <b>
+                                            <%= bank?.accountNo || "-" %>
+                                        </b>
+                                    </div>
+                                    <div>
+                                        <span style="opacity:.8;">Tên tài khoản:</span>
+                                        <b>
+                                            <%= bank?.accountName || "-" %>
+                                        </b>
+                                    </div>
+                                    <div>
+                                        <span style="opacity:.8;">Số tiền:</span>
+                                        <b>
+                                            <%= money(amount) %>
+                                        </b>
+                                    </div>
+                                    <div>
+                                        <span style="opacity:.8;">Nội dung:</span>
+                                        <b>
+                                            <%= noiDung || "-" %>
+                                        </b>
+                                    </div>
+                                </div>
+
+                                <% if (qr) { %>
+                                    <div style="margin-top:12px;display:flex;justify-content:center;">
+                                        <img src="<%= qr %>" alt="VietQR"
+                                            style="max-width:280px;width:100%;border-radius:12px;">
+                                    </div>
+                                    <div style="margin-top:8px;opacity:.85;font-size:13px;text-align:center;">
+                                        Quét QR để chuyển khoản đúng nội dung.
+                                    </div>
+                                    <% } else { %>
+                                        <div style="margin-top:10px;opacity:.85;font-size:13px;">
+                                            Không tạo được QR. Vui lòng chuyển khoản thủ công theo thông tin ở trên.
+                                        </div>
+                                        <% } %>
+                            </div>
+                            <% } %>
+
+                                <div class="tt-actions" style="margin-top:14px;">
+                                    <a class="tt-btn tt-btn--primary" href="/thucdon">Mua thêm</a>
+                                    <a class="tt-btn tt-btn--ghost" href="/">Về trang chủ</a>
+                                </div>
+                    </div>
+                </div>
+        </section>
+</body>
+
+</html>

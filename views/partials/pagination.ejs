@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="/css/pagination.css">
+<% if (pagination && pagination.totalPages> 1) { %>
+    <div class="pager">
+        <div class="pager__info">
+            Trang <b>
+                <%= pagination.page %>
+            </b> / <b>
+                <%= pagination.totalPages %>
+            </b>
+            (Tổng: <%= pagination.total %>)
+        </div>
+
+        <div class="pager__actions">
+            <% if (pagination.hasPrev) { %>
+                <a class="pager__btn" href="<%= baseUrl %>?page=<%= pagination.prevPage %>">← Trước</a>
+                <% } else { %>
+                    <span class="pager__btn pager__btn--disabled">← Trước</span>
+                    <% } %>
+
+                        <% for (let p=1; p <=pagination.totalPages; p++) { %>
+                            <a class="pager__btn <%= p === pagination.page ? 'pager__btn--active' : '' %>"
+                                href="<%= baseUrl %>?page=<%= p %>">
+                                <%= p %>
+                            </a>
+                            <% } %>
+
+                                <% if (pagination.hasNext) { %>
+                                    <a class="pager__btn" href="<%= baseUrl %>?page=<%= pagination.nextPage %>">Sau
+                                        →</a>
+                                    <% } else { %>
+                                        <span class="pager__btn pager__btn--disabled">Sau →</span>
+                                        <% } %>
+                                            <div class="pager__jump">
+                                                <input class="pager__input" type="number" min="1"
+                                                    max="<%= pagination.totalPages %>" placeholder="Trang...">
+                                                <button class="pager__go" type="button">Go</button>
+                                            </div>
+        </div>
+
+    </div>
+    <% } %>
+        <script>
+            (function () {
+                const pager = document.querySelector(".pager");
+                if (!pager) return;
+
+                const input = pager.querySelector(".pager__input");
+                const btn = pager.querySelector(".pager__go");
+                const totalPages = Number("<%= pagination.totalPages %>");
+                const baseUrl = "<%= baseUrl %>";
+
+                function go() {
+                    let p = parseInt(input.value, 10);
+                    if (!Number.isFinite(p)) return;
+
+                    if (p < 1) p = 1;
+                    if (p > totalPages) p = totalPages;
+
+                    window.location.href = baseUrl + "?page=" + p;
+                }
+
+                btn.addEventListener("click", go);
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") go();
+                });
+            })();
+        </script>

@@ -1,0 +1,141 @@
+<link rel="stylesheet" href="/css/admin-donhang.css">
+<link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+
+<% // map trạng thái -> tiếng Việt
+    const statusVI = (st) => {
+    const m = {
+    NEW: "Mới",
+    CONFIRMED: "Đã xác nhận",
+    COOKING: "Đang chuẩn bị",
+    SHIPPING: "Đang giao",
+    DONE: "Hoàn thành",
+    CANCELLED: "Đã huỷ",
+    };
+    return m[String(st || "NEW").toUpperCase()] || String(st || "NEW");
+    };
+
+    // baseUrl: có thể là "/admin/donhang" hoặc "/admin/donhang?..."
+    const joinPage = (p) => (baseUrl.includes("?") ? `${baseUrl}&page=${p}` : `${baseUrl}?page=${p}`);
+    %>
+
+    <div class="ad-o">
+        <div class="ad-o__head">
+            <h1 class="ad-o__title">Quản lý đơn hàng</h1>
+
+            <form class="ad-o__filters" method="GET" action="/admin/donhang">
+                <input class="ad-o__input" name="q" value="<%= q || '' %>"
+                    placeholder="Tìm theo mã đơn / tên / sđt / địa chỉ">
+
+                <select class="ad-o__select" name="status">
+                    <option value="">Tất cả trạng thái</option>
+                    <% ORDER_STATUS.forEach(st=> { %>
+                        <option value="<%= st %>" <%=(status===st ? 'selected' : '' ) %>>
+                            <%= statusVI(st) %>
+                        </option>
+                        <% }) %>
+                </select>
+
+                <select class="ad-o__select" name="limit">
+                    <% [10,15,20,30,50].forEach(n=> { %>
+                        <option value="<%= n %>" <%=(pagination?.limit===n ? 'selected' : '' ) %>>
+                            <%= n %>/trang
+                        </option>
+                        <% }) %>
+                </select>
+
+                <button class="ad-o__btn" type="submit">
+                    <i class="bi bi-search"></i> Lọc
+                </button>
+            </form>
+        </div>
+
+        <div class="ad-o__tableWrap">
+            <table class="ad-o__table">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Ngày</th>
+                        <th>Khách</th>
+                        <th>SĐT</th>
+                        <th>Tổng</th>
+                        <th>TT</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% if (!items || !items.length) { %>
+                        <tr>
+                            <td colspan="8" class="ad-o__empty">Chưa có đơn hàng</td>
+                        </tr>
+                        <% } else { %>
+                            <% items.forEach(o=> {
+                                const ship = o.ThongTinGiaoHang || o.thongTinGiaoHang || {};
+                                const st = String(o.TrangThai || "NEW").toUpperCase();
+                                %>
+                                <tr>
+                                    <td class="mono">#<%= shortId(o._id) %>
+                                    </td>
+                                    <td>
+                                        <%= fmtDate(o.createdAt) %>
+                                    </td>
+                                    <td>
+                                        <%= ship.HoTen || "-" %>
+                                    </td>
+                                    <td>
+                                        <%= ship.SDT || "-" %>
+                                    </td>
+                                    <td class="money">
+                                        <%= (Number(o.TongTien||0)).toLocaleString('vi-VN') %>₫
+                                    </td>
+
+                                    <td>
+                                        <% if (o.DaThanhToan) { %>
+                                            <span class="pill pill--ok">Đã TT</span>
+                                            <% } else { %>
+                                                <span class="pill pill--warn">Chưa TT</span>
+                                                <% } %>
+                                    </td>
+
+                                    <td>
+                                        <span class="pill pill--st pill--<%= st.toLowerCase() %>">
+                                            <%= statusVI(st) %>
+                                        </span>
+                                    </td>
+
+                                    <td class="right">
+                                        <a class="ad-o__link" href="/admin/donhang/<%= o._id %>">Xem</a>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <% if (pagination && pagination.totalPages> 1) { %>
+            <div class="ad-o__pager">
+                <% if (pagination.hasPrev) { %>
+                    <a class="ad-o__pbtn" href="<%= joinPage(pagination.prevPage) %>">← Trước</a>
+                    <% } else { %>
+                        <span class="ad-o__pbtn dis">← Trước</span>
+                        <% } %>
+
+                            <div class="ad-o__pinfo">
+                                Trang <b>
+                                    <%= pagination.page %>
+                                </b> / <b>
+                                    <%= pagination.totalPages %>
+                                </b>
+                                (Tổng: <%= pagination.total %>)
+                            </div>
+
+                            <% if (pagination.hasNext) { %>
+                                <a class="ad-o__pbtn" href="<%= joinPage(pagination.nextPage) %>">Sau →</a>
+                                <% } else { %>
+                                    <span class="ad-o__pbtn dis">Sau →</span>
+                                    <% } %>
+            </div>
+            <% } %>
+    </div>

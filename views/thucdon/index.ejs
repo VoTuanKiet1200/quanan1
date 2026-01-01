@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/thucdon.css">
+  <link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+
+</head>
+
+<body>
+  <%- include('../nav', { active: 'thucdon' }) %>
+    <% const money=(n)=> (Number(n||0)).toLocaleString('vi-VN') + "₫"; %>
+      <% const buildQS=(patch={})=> {
+        const params = new URLSearchParams({
+        q: state.q || "",
+        dm: state.dm || "",
+        sort: state.sort || "new",
+        page: String(state.page || 1),
+        });
+        Object.entries(patch).forEach(([k,v])=>{
+        if (v===null || v===undefined || v==="") params.delete(k);
+        else params.set(k, String(v));
+        });
+        return "?" + params.toString();
+        };
+        %>
+
+        <section class="menu">
+
+          <div class="menu-head">
+            <div>
+              <h1 class="menu-title">Thực đơn</h1>
+              <p class="menu-sub">Chọn món bạn thích và thêm vào giỏ hàng.</p>
+            </div>
+
+            <form class="menu-search" method="GET" action="/thucdon">
+              <input name="q" value="<%= state.q %>" placeholder="Tìm món (Tom Yum, Pad Thai...)" />
+              <input type="hidden" name="dm" value="<%= state.dm %>">
+              <input type="hidden" name="sort" value="<%= state.sort %>">
+              <button type="submit">Tìm</button>
+            </form>
+          </div>
+
+          <div class="menu-filters">
+            <div class="tabs">
+              <a class="tab <%= !state.dm ? 'is-active' : '' %>" href="/thucdon<%= buildQS({dm:'' , page:1}) %>">Tất
+                cả</a>
+              <% categories.forEach(c=> { %>
+                <a class="tab <%= (state.dm===c.Slug) ? 'is-active' : '' %>"
+                  href="/thucdon<%= buildQS({dm:c.Slug, page:1}) %>">
+                  <%= c.TenDanhMuc %>
+                </a>
+                <% }) %>
+            </div>
+
+            <div class="sort">
+              <label>Sắp xếp</label>
+              <select onchange="location.href='/thucdon' + this.value">
+                <option value="<%= buildQS({sort:'new', page:1}) %>" <%=state.sort==='new' ?'selected':'' %>>Mới nhất
+                </option>
+                <option value="<%= buildQS({sort:'best', page:1}) %>" <%=state.sort==='best' ?'selected':'' %>>Bán chạy
+                </option>
+                <option value="<%= buildQS({sort:'price_asc', page:1}) %>" <%=state.sort==='price_asc' ?'selected':'' %>
+                  >Giá
+                  tăng dần</option>
+                <option value="<%= buildQS({sort:'price_desc', page:1}) %>" <%=state.sort==='price_desc' ?'selected':''
+                  %>
+                  >Giá giảm dần</option>
+              </select>
+            </div>
+          </div>
+
+          <% if (!items || items.length===0) { %>
+            <div class="empty">
+              Không có món phù hợp.
+            </div>
+            <% } else { %>
+
+              <div class="grid">
+                <% items.forEach(it=> {
+                  const g = Number(it.Gia || 0);
+                  const gkm = Number(it.GiaKhuyenMai || 0);
+                  const hasSale = gkm > 0 && gkm < g; const priceNow=hasSale ? gkm : g; const out=Number(it.SoLuongTon
+                    || 0) <=0; const img=(it.HinhAnh && it.HinhAnh.trim()) ? it.HinhAnh : "/images/placeholder-food.png"
+                    ; %>
+
+                    <article class="card">
+                      <a class="card-img" href="/monan/<%= it.Slug %>">
+                        <img src="<%= img %>" alt="<%= it.TenMon %>">
+                        <% if (hasSale) { %><span class="badge">Sale</span>
+                          <% } %>
+                            <% if (out) { %><span class="badge badge--out">Hết món</span>
+                              <% } %>
+                      </a>
+
+                      <div class="card-body">
+                        <div class="card-top">
+                          <h3 class="card-title">
+                            <a href="/monan/<%= it.Slug %>">
+                              <%= it.TenMon %>
+                            </a>
+                          </h3>
+                          <div class="card-cat">
+                            <%= it.DanhMucId?.TenDanhMuc || "" %>
+                          </div>
+                        </div>
+
+                        <p class="card-desc">
+                          <%= it.MoTaNgan || "" %>
+                        </p>
+
+                        <div class="card-price">
+                          <span class="now">
+                            <%= money(priceNow) %>
+                          </span>
+                          <% if (hasSale) { %>
+                            <span class="old">
+                              <%= money(g) %>
+                            </span>
+                            <% } %>
+                        </div>
+
+                        <div class="card-actions">
+                          <button class="btn-ds s2-btn--primary" type="button"
+                            onclick="__addToCart('<%= it._id %>', 1, this, document.getElementById('img-<%= it._id %>'))"
+                            <%=out ? 'disabled aria-disabled="true"' : '' %>
+                            >
+                            <%= out ? 'Hết hàng' : 'Thêm vào giỏ' %>
+                          </button>
+
+                          <a class="btn-ds btn--ghost" href="/monan/<%= it.Slug %>">Xem</a>
+                        </div>
+                      </div>
+                    </article>
+
+                    <% }) %>
+              </div>
+
+              <% const curPage=Number(state?.page || 1); const totalPages=Number(state?.totalPages || 1); const mk=(p)=>
+                "/thucdon" + buildQS({ page: p });
+
+                const windowSize = 7;
+                let start = Math.max(1, curPage - Math.floor(windowSize / 2));
+                let end = Math.min(totalPages, start + windowSize - 1);
+                start = Math.max(1, end - windowSize + 1);
+
+                const showFirst = start > 1;
+                const showLast = end < totalPages; %>
+
+                  <nav class="pager">
+                    <div class="pager__info">
+                      Trang <b>
+                        <%= curPage %>
+                      </b> / <b>
+                        <%= totalPages %>
+                      </b> (Tổng: <%= state.total %>)
+                    </div>
+
+                    <div class="pager__actions">
+                      <% if (curPage> 1) { %>
+                        <a class="pager__btn" href="<%= mk(curPage - 1) %>">← Trước</a>
+                        <% } else { %>
+                          <span class="pager__btn pager__btn--disabled">← Trước</span>
+                          <% } %>
+
+                            <% if (showFirst) { %>
+                              <a class="pager__btn <%= curPage===1?'pager__btn--active':'' %>" href="<%= mk(1) %>">1</a>
+                              <% if (start> 2) { %><span class="pager__dots">…</span>
+                                <% } %>
+                                  <% } %>
+
+                                    <% for (let p=start; p <=end; p++) { %>
+                                      <a class="pager__btn <%= p===curPage?'pager__btn--active':'' %>"
+                                        href="<%= mk(p) %>">
+                                        <%= p %>
+                                      </a>
+                                      <% } %>
+
+                                        <% if (showLast) { %>
+                                          <% if (end < totalPages - 1) { %><span class="pager__dots">…</span>
+                                            <% } %>
+                                              <a class="pager__btn <%= curPage===totalPages?'pager__btn--active':'' %>"
+                                                href="<%= mk(totalPages) %>">
+                                                <%= totalPages %>
+                                              </a>
+                                              <% } %>
+
+                                                <% if (curPage < totalPages) { %>
+                                                  <a class="pager__btn" href="<%= mk(curPage + 1) %>">Sau →</a>
+                                                  <% } else { %>
+                                                    <span class="pager__btn pager__btn--disabled">Sau →</span>
+                                                    <% } %>
+
+                                                      <form class="pager__jump" method="GET" action="/thucdon">
+                                                        <input type="hidden" name="q" value="<%= state.q %>">
+                                                        <input type="hidden" name="dm" value="<%= state.dm %>">
+                                                        <input type="hidden" name="sort" value="<%= state.sort %>">
+                                                        <input class="pager__input" type="number" name="page" min="1"
+                                                          max="<%= totalPages %>" placeholder="Trang..." />
+                                                        <button class="pager__go" type="submit">Go</button>
+                                                      </form>
+                    </div>
+                  </nav>
+
+
+
+                  <% } %>
+        </section>
+
+</body>
+<script>
+  document.addEventListener("submit", async (e) => {
+    const form = e.target.closest("form[data-addcart]");
+    if (!form) return;
+
+    e.preventDefault();
+
+    const btn = form.querySelector("button[type='submit']");
+    if (btn && btn.disabled) return;
+
+    if (btn) {
+      btn.disabled = true;
+      btn.dataset.oldText = btn.textContent;
+      btn.textContent = "Đang thêm...";
+    }
+
+    try {
+      const res = await fetch(form.action + "?json=1", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: new URLSearchParams(new FormData(form)),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (data?.ok) {
+        // Nếu bạn đã có hàm loadMiniCart() trong script overlay
+        if (typeof loadMiniCart === "function") loadMiniCart();
+
+        // Nếu muốn tự mở overlay
+        const overlay = document.getElementById("cart-overlay");
+        if (overlay) overlay.classList.add("is-open");
+      } else {
+        alert(data?.message || "Không thêm được vào giỏ.");
+      }
+    } catch (err) {
+      alert("Lỗi mạng, thử lại.");
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = btn.dataset.oldText || "Thêm vào giỏ";
+      }
+    }
+  });
+</script>
+
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+        <%= title %>
+    </title>
+
+    <link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/dangky.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/logo2.png">
+</head>
+
+<body>
+    <div class="auth-page">
+        <div class="auth-card">
+
+            <!-- CỘT TRÁI: FORM ĐĂNG KÝ -->
+            <div class="auth-left">
+                <div class="auth-left-inner">
+                    <h1 class="auth-title">Đăng ký</h1>
+                    <p class="auth-subtitle">Tạo tài khoản để mua sắm nhanh hơn và nhận ưu đãi.</p>
+
+                    <!-- Vì bạn mount router: app.use("/auth", ... ) -->
+                    <form method="POST" action="/dangky" class="auth-form">
+
+
+                        <div class="auth-field">
+                            <label class="auth-label" for="HoVaTen">Họ và tên</label>
+                            <input id="HoVaTen" class="auth-input" name="HoVaTen" required
+                                placeholder="VD: Nguyễn Văn A" />
+                        </div>
+
+                        <div class="auth-field">
+                            <label class="auth-label" for="Email">Email (bắt buộc)</label>
+                            <input id="Email" class="auth-input" name="Email" type="email" required
+                                placeholder="vd: you@gmail.com" />
+                        </div>
+
+                        <div class="auth-field">
+                            <label class="auth-label" for="SoDienThoai">Số điện thoại (không bắt buộc)</label>
+                            <input id="SoDienThoai" class="auth-input" name="SoDienThoai" type="tel"
+                                placeholder="VD: 09xxxxxxxx" />
+                        </div>
+
+                        <div class="auth-field">
+                            <div class="auth-label-row">
+                                <label class="auth-label" for="MatKhau">Mật khẩu</label>
+                            </div>
+
+                            <div class="auth-password-wrap">
+                                <input id="MatKhau" class="auth-input" name="MatKhau" type="password" required
+                                    minlength="6" placeholder="Tối thiểu 6 ký tự" />
+                                <button type="button" class="auth-eye-btn" id="togglePw" aria-label="Hiện/ẩn mật khẩu">
+                                    <i class="bi bi-eye auth-eye-icon" id="eyeIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-primary-btn">Tạo tài khoản</button>
+
+                        <div class="auth-links-row">
+                            <a class="auth-link" href="/dangnhap">Đăng nhập</a>
+                            <span class="auth-links-separator">•</span>
+                            <a class="auth-link" href="/">Về trang chủ</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: WELCOME -->
+            <div class="auth-right">
+                <div class="auth-right-overlay"></div>
+                <div class="auth-right-inner">
+                    <h2 class="auth-right-title"><span class="hl">XIN CHÀO</span></h2>
+                    <p class="auth-right-text">
+                        Đăng ký để nhận ưu đãi, theo dõi đơn hàng và tích điểm thành viên.
+                    </p>
+
+                    <div class="auth-logo-circle">
+                        <img src="/images/robo4.png" alt="Logo" class="auth-right-logo" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Hiện/ẩn mật khẩu
+        const pw = document.getElementById("MatKhau");
+        const btn = document.getElementById("togglePw");
+        const icon = document.getElementById("eyeIcon");
+
+        btn.addEventListener("click", () => {
+            const show = pw.type === "password";
+            pw.type = show ? "text" : "password";
+            icon.className = show ? "bi bi-eye-slash auth-eye-icon" : "bi bi-eye auth-eye-icon";
+        });
+    </script>
+</body>
+
+</html>

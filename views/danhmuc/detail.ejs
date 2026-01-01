@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+        <%= title || (dm?.TenDanhMuc || "Danh mục" ) %>
+    </title>
+    <link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/danhmuc-detail.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="../images/logo2.png">
+
+</head>
+
+<body>
+    <div class="trangchu">
+        <%- include("../nav") %>
+            <main class="main">
+                <section class="section dm-page">
+
+
+                    <div class="dm-wrap">
+
+                        <header class="dm-head">
+                            <div>
+                                <h1 class="dm-title">
+                                    <%= dm?.TenDanhMuc || "Danh mục" %>
+                                </h1>
+                                <p class="dm-sub">
+                                    Tổng: <b>
+                                        <%= pagination?.total ?? (items?.length || 0) %>
+                                    </b> sản phẩm
+                                </p>
+                            </div>
+
+                            <a class="dm-back" href="/sanpham">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+                        </header>
+
+                        <% if (!items || items.length===0) { %>
+                            <div class="dm-empty">
+                                <div class="dm-empty__box">
+                                    <h3>Chưa có sản phẩm</h3>
+                                    <p>Danh mục này hiện chưa có sản phẩm nào.</p>
+                                    <a class="btn" href="/sanpham">Xem tất cả sản phẩm</a>
+                                </div>
+                            </div>
+                            <% } else { %>
+
+                                <!-- GRID (giống pl-grid) -->
+                                <div class="pl-grid">
+                                    <% (items || []).forEach(sp=> {
+                                        const sl = Number(sp.SoLuong ?? 0);
+                                        const hasSale = (sp.GiaKhuyenMai && sp.GiaKhuyenMai > 0 && sp.GiaKhuyenMai <
+                                            sp.Gia); const finalPrice=hasSale ? sp.GiaKhuyenMai : sp.Gia; const
+                                            percentOff=hasSale ? Math.round((1 - (sp.GiaKhuyenMai / sp.Gia)) * 100) : 0;
+                                            %>
+
+                                            <article class="p-card">
+                                                <a class="p-link" href="/sanpham/<%= sp.Slug %>">
+                                                    <span class="p-thumb">
+                                                        <img src="<%= sp.HinhAnhChinh || '/images/robo.png' %>"
+                                                            alt="<%= sp.TenSanPham %>" loading="lazy">
+                                                        <span class="p-badges">
+                                                            <% if (hasSale) { %>
+                                                                <span class="p-badge sale">-<%= percentOff %>%</span>
+                                                                <% } %>
+
+                                                                    <span
+                                                                        class="p-stock <%= sl <= 0 ? 'is-zero' : (sl < 5 ? 'is-low' : 'is-ok') %>">
+                                                                        <% if (sl <=0) { %>
+                                                                            Hết hàng
+                                                                            <% } else { %>
+                                                                                SL: <b>
+                                                                                    <%= sl %>
+                                                                                </b>
+                                                                                <% } %>
+                                                                    </span>
+                                                        </span>
+                                                    </span>
+
+                                                    <h3 class="p-name">
+                                                        <%= sp.TenSanPham %>
+                                                    </h3>
+
+                                                    <div class="p-meta">
+                                                        <span class="p-chip">
+                                                            <%= sp.DanhMuc?.TenDanhMuc || '' %>
+                                                        </span>
+                                                        <span class="p-chip">
+                                                            <%= sp.ThuongHieu?.TenThuongHieu || '' %>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="p-price">
+                                                        <span class="p-now">
+                                                            <%= (finalPrice || 0).toLocaleString('vi-VN') %>₫
+                                                        </span>
+                                                        <% if (hasSale) { %>
+                                                            <span class="p-old">
+                                                                <%= (sp.Gia || 0).toLocaleString('vi-VN') %>₫
+                                                            </span>
+                                                            <% } %>
+                                                    </div>
+                                                </a>
+
+                                                <div class="p-actions">
+                                                    <% if (sl <=0) { %>
+                                                        <a class="p-btn giohang is-disabled" href="#"
+                                                            aria-disabled="true" tabindex="-1" title="Hết hàng">
+                                                            <i class="bi bi-cart-fill"></i>
+                                                        </a>
+                                                        <% } else { %>
+                                                            <button type="button" class="p-btn giohang"
+                                                                onclick="__addToCart('<%= sp._id %>', 1, this)">
+                                                                <i class="bi bi-cart-fill"></i>
+                                                            </button>
+                                                            <% } %>
+
+                                                                <% if (sl <=0) { %>
+                                                                    <a class="p-btn primary is-disabled" href="#"
+                                                                        aria-disabled="true" tabindex="-1">
+                                                                        <i class="bi bi-cart-fill"></i> Hết hàng
+                                                                    </a>
+                                                                    <% } else { %>
+                                                                        <a class="p-btn primary"
+                                                                            href="/thanhtoan/mua-ngay/<%= sp._id %>">Mua
+                                                                            ngay</a>
+                                                                        <% } %>
+                                                </div>
+                                            </article>
+
+                                            <% }) %>
+                                </div>
+
+                                <!-- Pagination giữ nguyên -->
+                                <% if (pagination && pagination.totalPages> 1) {
+                                    const cur = pagination.page;
+                                    const totalPages = pagination.totalPages;
+
+                                    const pageUrl = (p) => {
+                                    const sep = pageBaseUrl.includes("?") ? "&" : "?";
+                                    return pageBaseUrl + sep + "page=" + p;
+                                    };
+                                    %>
+                                    <nav class="pager" aria-label="Pagination">
+                                        <a class="pager-btn <%= cur <= 1 ? 'is-disabled' : '' %>"
+                                            href="<%= cur <= 1 ? 'javascript:void(0)' : pageUrl(cur - 1) %>">‹ Trước</a>
+
+                                        <div class="pager-pages">
+                                            <% const show=new Set([1, totalPages, cur - 1, cur, cur + 1].filter(x=> x >=
+                                                1 && x <= totalPages)); const list=Array.from(show).sort((a, b)=> a -
+                                                    b);
+                                                    let last = 0;
+                                                    list.forEach(p => {
+                                                    if (last && p - last > 1) { %>
+                                                    <span class="pager-dots">…</span>
+                                                    <% } %>
+                                                        <a class="pager-num <%= p === cur ? 'is-active' : '' %>"
+                                                            href="<%= pageUrl(p) %>">
+                                                            <%= p %>
+                                                        </a>
+                                                        <% last=p; }); %>
+                                        </div>
+
+                                        <a class="pager-btn <%= cur >= totalPages ? 'is-disabled' : '' %>"
+                                            href="<%= cur >= totalPages ? 'javascript:void(0)' : pageUrl(cur + 1) %>">Sau
+                                            ›</a>
+                                    </nav>
+                                    <% } %>
+
+                                        <% } %>
+
+                    </div>
+
+
+                </section>
+            </main>
+
+
+    </div>
+    <%- include("../footer") %>
+</body>
+
+</html>

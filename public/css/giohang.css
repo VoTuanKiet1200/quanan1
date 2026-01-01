@@ -1,0 +1,343 @@
+body {
+    background-color: rgba(247, 247, 247, 0.952);
+}
+
+.gh {
+    padding: 18px 0;
+
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.gh-wrap {
+    width: 1400px;
+    margin: 0 auto;
+    margin-top: 120px;
+}
+
+.gh-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 10px 0 18px;
+}
+
+.gh-title {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: .2px;
+}
+
+.gh-sub {
+    opacity: .8;
+    font-size: 14px;
+}
+
+/* ===== Empty ===== */
+.gh-empty {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, .04);
+}
+
+.gh-empty i {
+    font-size: 34px;
+    opacity: .85;
+}
+
+.gh-empty__title {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.gh-empty__sub {
+    opacity: .8;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+/* ===== Layout ===== */
+.gh-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 18px;
+    align-items: start;
+}
+
+@media (max-width: 980px) {
+    .gh-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== List / Item ===== */
+.gh-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.gh-item {
+    display: grid;
+    grid-template-columns: 112px 1fr;
+    gap: 14px;
+    padding: 14px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    background: rgb(255, 255, 255);
+}
+
+@media (max-width: 560px) {
+    .gh-item {
+        grid-template-columns: 92px 1fr;
+        padding: 12px;
+        border-radius: 16px;
+    }
+}
+
+.gh-item__img {
+    width: 112px;
+    height: 92px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, .06);
+}
+
+@media (max-width:560px) {
+    .gh-item__img {
+        width: 92px;
+        height: 84px;
+        border-radius: 14px;
+    }
+}
+
+.gh-item__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.gh-item__main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gh-item__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.gh-item__name {
+    font-weight: 750;
+    font-size: 16px;
+    line-height: 1.25;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gh-item__removeForm {
+    margin: 0;
+}
+
+.gh-item__remove {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    color: inherit;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+}
+
+.gh-item__remove:hover {
+    background: rgba(255, 255, 255, .10);
+}
+
+.gh-item__remove:active {
+    transform: translateY(1px);
+}
+
+.gh-item__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 14px;
+    opacity: .9;
+}
+
+.gh-item__unit b {
+    font-weight: 800;
+}
+
+/* ===== Bottom row ===== */
+.gh-item__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.gh-item__line {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-left: auto;
+    color: rgb(247, 91, 91);
+}
+
+.gh-item__line span {
+    font-size: 14px;
+    opacity: .8;
+}
+
+.gh-item__line b {
+    font-size: 16px;
+    font-weight: 850;
+}
+
+/* ===== Qty form ===== */
+.gh-qtyForm {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.gh-qtyLabel {
+    font-size: 13px;
+    opacity: .75;
+}
+
+.gh-qtyInput {
+    width: 86px;
+    padding: 9px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .14);
+    background: rgb(243, 243, 243);
+    color: inherit;
+    outline: none;
+}
+
+.gh-qtyInput:focus {
+    border-color: rgba(255, 255, 255, .28);
+}
+
+.gh-qtySubmit {
+    padding: 9px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .14);
+    background: rgb(61, 61, 61);
+
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.gh-qtySubmit:hover {
+    background: rgba(255, 255, 255, .14);
+}
+
+.gh-qtySubmit:active {
+    transform: translateY(1px);
+}
+
+/* ===== Summary ===== */
+.gh-sum {
+    position: sticky;
+    top: 92px;
+    /* chỉnh theo chiều cao header/nav của bạn */
+}
+
+@media (max-width: 980px) {
+    .gh-sum {
+        position: static;
+    }
+}
+
+.gh-sum__box {
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    background: rgb(255, 255, 255);
+    padding: 14px;
+}
+
+.gh-sum__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 6px;
+    gap: 12px;
+}
+
+.gh-sum__row span {
+    opacity: .82;
+    font-size: 14px;
+}
+
+.gh-sum__row b {
+    font-weight: 850;
+}
+
+.gh-sum__row--big {
+    border-top: 1px dashed rgba(255, 255, 255, .12);
+    margin-top: 4px;
+    padding-top: 14px;
+}
+
+.gh-sum__row--big b {
+    font-size: 18px;
+}
+
+/* ===== Buttons ===== */
+.gh-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    padding: 11px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, .14);
+    background: rgba(255, 255, 255, .08);
+    color: white;
+    text-decoration: none;
+    font-weight: 800;
+    margin-top: 10px;
+}
+
+.gh-btn:hover {
+    background: rgba(73, 73, 73, 0.986);
+}
+
+.gh-btn:active {
+    transform: translateY(1px);
+}
+
+.gh-btn--primary {
+    background: rgb(252, 104, 104);
+
+}
+
+.gh-btn--primary:hover {
+    background: rgb(224, 79, 79);
+}
+
+.gh-btn--ghost {
+    background: rgb(54, 54, 54);
+}

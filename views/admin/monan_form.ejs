@@ -1,0 +1,148 @@
+<!-- views/admin/monan_form.ejs -->
+<link rel="stylesheet" href="/css/monanform.css">
+
+<div class="monanform">
+    <div class="monanform-head">
+        <div>
+            <h2 class="monanform-title">
+                <%= title || (mode==='edit' ? 'Sửa món ăn' : 'Thêm món ăn' ) %>
+            </h2>
+            <div class="monanform-sub">
+                <%= mode==='edit' ? 'Cập nhật thông tin món ăn' : 'Thêm món ăn mới' %>
+            </div>
+        </div>
+
+        <a class="monanform-back" href="/admin/monan">
+            <i class="bi bi-arrow-left"></i> Quay lại danh sách
+        </a>
+    </div>
+
+    <form class="monanform-card" method="POST"
+        action="<%= mode==='edit' ? ('/admin/monan/sua/' + item._id) : '/admin/monan/them' %>"
+        enctype="multipart/form-data">
+
+        <div class="monanform-grid">
+
+            <div class="monanform-field">
+                <label class="monanform-label">Tên món <span class="req">*</span></label>
+                <input class="monanform-input" name="TenMon" required maxlength="120" value="<%= item?.TenMon || '' %>"
+                    placeholder="VD: Tom Yum, Pad Thái..." />
+            </div>
+
+            <div class="monanform-field">
+                <label class="monanform-label">Slug (tuỳ chọn)</label>
+                <input class="monanform-input" name="Slug" value="<%= item?.Slug || '' %>"
+                    placeholder="tu-dong-neu-bo-trong" />
+                <small class="monanform-hint">Bỏ trống để hệ thống tự tạo theo tên.</small>
+            </div>
+
+            <div class="monanform-field">
+                <label class="monanform-label">Danh mục <span class="req">*</span></label>
+                <select class="monanform-input" name="DanhMucId" required>
+                    <option value="">-- Chọn danh mục --</option>
+                    <% (danhMucs||[]).forEach(dm=>{ %>
+                        <option value="<%= dm._id %>" <%=String(item?.DanhMucId)===String(dm._id) ? 'selected' : '' %>>
+                            <%= dm.TenDanhMuc %>
+                        </option>
+                        <% }) %>
+                </select>
+            </div>
+
+            <div class="monanform-field">
+                <label class="monanform-label">Kích hoạt</label>
+                <select class="monanform-input" name="KichHoat">
+                    <option value="1" <%=Number(item?.KichHoat ?? 1)===1 ? 'selected' : '' %>>Bật</option>
+                    <option value="0" <%=Number(item?.KichHoat ?? 1)===0 ? 'selected' : '' %>>Tắt</option>
+                </select>
+            </div>
+
+            <div class="monanform-field">
+                <label class="monanform-label">Giá <span class="req">*</span></label>
+                <input class="monanform-input" name="Gia" type="number" min="0" required value="<%= item?.Gia ?? '' %>"
+                    placeholder="VD: 59000" />
+            </div>
+
+            <div class="monanform-field">
+                <label class="monanform-label">Giá khuyến mãi</label>
+                <input class="monanform-input" name="GiaKhuyenMai" type="number" min="0"
+                    value="<%= item?.GiaKhuyenMai ?? 0 %>" placeholder="VD: 49000" />
+            </div>
+
+            <div class="monanform-field">
+                <label class="monanform-label">Số lượng tồn</label>
+                <input class="monanform-input" name="SoLuongTon" type="number" min="0"
+                    value="<%= item?.SoLuongTon ?? 0 %>" />
+                <small class="monanform-hint">Nếu không quản lý tồn, bạn có thể để số lớn.</small>
+            </div>
+
+            <div class="monanform-field monanform-field--full">
+                <label class="monanform-label">Mô tả ngắn</label>
+                <textarea class="monanform-textarea" name="MoTaNgan" rows="3"
+                    placeholder="VD: Chua cay đậm vị Thái, ăn kèm rau thơm..."><%= item?.MoTaNgan || '' %></textarea>
+            </div>
+
+            <div class="monanform-field monanform-field--full">
+                <label class="monanform-label">Mô tả chi tiết</label>
+                <textarea class="monanform-textarea" name="MoTaChiTiet" rows="6"
+                    placeholder="Thành phần, cách ăn, ghi chú..."><%= item?.MoTaChiTiet || '' %></textarea>
+            </div>
+
+            <div class="monanform-field monanform-field--full">
+                <label class="monanform-label">Ảnh món ăn</label>
+
+                <div class="monanform-upload">
+                    <input class="monanform-input" type="file" name="HinhAnh" accept="image/png,image/jpeg,image/webp"
+                        id="HinhAnh">
+
+                    <div class="monanform-preview">
+                        <% if (item?.HinhAnh) { %>
+                            <img id="previewImg" src="<%= item.HinhAnh %>" alt="Ảnh món">
+                            <% } else { %>
+                                <img id="previewImg" src="/images/robo.png" alt="Ảnh món">
+                                <% } %>
+                    </div>
+                </div>
+
+                <% if (mode==='edit' && item?.HinhAnh) { %>
+                    <label class="monanform-check">
+                        <input type="checkbox" name="XoaAnh" value="1">
+                        Xóa ảnh hiện tại
+                    </label>
+                    <% } %>
+            </div>
+
+        </div>
+
+        <div class="monanform-actions">
+            <button class="monanform-btn monanform-btn--primary" type="submit">
+                <%= mode==='edit' ? 'Lưu thay đổi' : 'Thêm món' %>
+            </button>
+
+            <a class="monanform-btn" href="/admin/monan">Hủy</a>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    (function () {
+        const input = document.getElementById('HinhAnh');
+        const img = document.getElementById('previewImg');
+        if (!input || !img) return;
+
+        input.addEventListener('change', () => {
+            const f = input.files && input.files[0];
+            if (!f) return;
+
+            if (!/^image\/(png|jpe?g|webp)$/i.test(f.type)) {
+                alert('Chỉ chọn ảnh PNG/JPG/WEBP');
+                input.value = '';
+                return;
+            }
+
+            const url = URL.createObjectURL(f);
+            img.src = url;
+            img.onload = () => URL.revokeObjectURL(url);
+        });
+    })();
+</script>
